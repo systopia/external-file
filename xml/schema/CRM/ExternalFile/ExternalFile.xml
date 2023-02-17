@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/ExternalFile</base>
+  <class>ExternalFile</class>
+  <name>civicrm_external_file</name>
+  <comment>Metadata about files (to be) loaded from external sources</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique ExternalFile ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>file_id</name>
+    <type>int unsigned</type>
+    <comment>FK to File</comment>
+  </field>
+  <foreignKey>
+    <name>file_id</name>
+    <table>civicrm_file</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <index>
+    <name>UI_external_file_file_id</name>
+    <fieldName>file_id</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
+    <name>source</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>Source URI</comment>
+    <crmType>CRM_Utils_Type::T_URL</crmType>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>filename</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>Filename in download URI</comment>
+  </field>
+
+  <field>
+    <name>extension</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>The extension that added the file</comment>
+  </field>
+
+  <field>
+    <name>custom_data</name>
+    <type>text</type>
+    <required>false</required>
+    <serialize>JSON</serialize>
+    <comment>Optional additional data</comment>
+  </field>
+
+  <field>
+    <name>status</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\ExternalFile\ExternalFileStatus::getAll</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>download_start_date</name>
+    <type>datetime</type>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>download_try_count</name>
+    <type>int unsigned</type>
+    <required>true</required>
+  </field>
+
+  <field>
+    <name>last_modified</name>
+    <type>varchar</type>
+    <length>255</length>
+    <comment>Date used in Last-Modified header</comment>
+  </field>
+
+</table>

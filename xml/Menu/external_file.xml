@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/external-file/download</path>
+    <page_callback>CRM_ExternalFile_Page_FileDownload</page_callback>
+    <title>FileDownload</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

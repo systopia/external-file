@@ -1,0 +1,18 @@
+<?php
+declare(strict_types = 1);
+
+namespace Civi\Core;
+
+use Symfony\Contracts\EventDispatcher\Event;
+
+interface CiviEventDispatcherInterface {
+
+  /**
+   * @param string $eventName
+   * @param \Symfony\Contracts\EventDispatcher\Event|null $event
+   *
+   * @return \Symfony\Contracts\EventDispatcher\Event
+   */
+  public function dispatch(string $eventName, Event $event = NULL): Event;
+
+}
