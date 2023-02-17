@@ -35,5 +35,5 @@ else
 fi
 
 cd "$EXT_DIR"
-composer update --no-progress --prefer-dist --optimize-autoloader --no-dev
+composer require --no-progress --prefer-dist --optimize-autoloader --update-no-dev 'fig/log-test:^1'
 composer composer-phpunit -- update --no-progress --prefer-dist

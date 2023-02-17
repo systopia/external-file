@@ -10,13 +10,13 @@
     },
     "require": {
         "webmozart/assert": "^1.11",
-        "symfony/http-foundation": ">=4",
-        "symfony/mime": ">=4"
+        "symfony/http-foundation": ">=4.4",
+        "symfony/mime": ">=4.4"
     },
     "require-dev": {
         "civicrm/civicrm-core": "^5.57",
         "civicrm/civicrm-packages": "^5.57",
-        "fig/log-test": "^1.1"
+        "fig/log-test": "^1"
     },
     "scripts": {
         "post-install-or-update": [
