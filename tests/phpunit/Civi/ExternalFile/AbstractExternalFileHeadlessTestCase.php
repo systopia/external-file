@@ -34,4 +34,18 @@ abstract class AbstractExternalFileHeadlessTestCase extends TestCase implements 
       ->apply();
   }
 
+  protected function setUp(): void {
+    parent::setUp();
+    $this->setUserPermissions(['access CiviCRM', 'access uploaded files']);
+  }
+
+  /**
+   * @phpstan-param array<string>|null $permissions
+   */
+  protected function setUserPermissions(?array $permissions): void {
+    $userPermissions = \CRM_Core_Config::singleton()->userPermissionClass;
+    // @phpstan-ignore-next-line
+    $userPermissions->permissions = $permissions;
+  }
+
 }

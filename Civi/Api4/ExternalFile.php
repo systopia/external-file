@@ -44,4 +44,8 @@ class ExternalFile extends AbstractEntity {
     return \Civi::service(UpdateAction::class);
   }
 
+  public static function permissions() {
+    return File::permissions();
+  }
+
 }

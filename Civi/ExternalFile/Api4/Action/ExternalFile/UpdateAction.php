@@ -59,7 +59,12 @@ final class UpdateAction extends DAOUpdateAction {
     if ([] !== $fileValues && ['id'] !== array_keys($fileValues)) {
       Assert::integer($fileValues['id'] ?? NULL, '"file_id" is required to update "file_" fields');
 
-      return $this->api4->updateEntity('File', $fileValues['id'], $fileValues)->single();
+      return $this->api4->updateEntity(
+        'File',
+        $fileValues['id'],
+        $fileValues,
+        ['checkPermissions' => FALSE],
+      )->single();
     }
 
     return [];

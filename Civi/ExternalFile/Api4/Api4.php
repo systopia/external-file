@@ -54,20 +54,6 @@ final class Api4 implements Api4Interface {
     return Request::create($entityName, $action, $params);
   }
 
-  public function createEntity(string $entityName, array $values): Result {
-    return $this->execute($entityName, 'create', [
-      'values' => $values,
-    ]);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function createGetAction(string $entityName): AbstractAction {
-    // @phpstan-ignore-next-line Does not return AbstractGetAction.
-    return $this->createAction($entityName, 'get');
-  }
-
   /**
    * @inheritDoc
    */
@@ -82,15 +68,6 @@ final class Api4 implements Api4Interface {
     return $this->createAction($entityName, $actionName, $params)->execute();
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getEntity(string $entityName, int $id): Result {
-    return $this->execute($entityName, 'get', [
-      'where' => [['id', '=', $id]],
-    ]);
-  }
-
   public function getEntityFields(string $entityName, string $action = 'get', array $values = []): Result {
     return $this->execute($entityName, 'getFields', [
       'action' => $action,
@@ -98,8 +75,9 @@ final class Api4 implements Api4Interface {
     ]);
   }
 
-  public function updateEntity(string $entityName, int $id, array $values): Result {
+  public function updateEntity(string $entityName, int $id, array $values, array $options = []): Result {
     return $this->execute($entityName, 'update', [
+      'checkPermissions' => $options['checkPermissions'] ?? TRUE,
       'where' => [['id', '=', $id]],
       'values' => $values,
     ]);

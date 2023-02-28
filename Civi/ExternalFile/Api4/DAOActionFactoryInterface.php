@@ -22,6 +22,7 @@ namespace Civi\ExternalFile\Api4;
 use Civi\Api4\Generic\DAOCreateAction;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\DAOGetAction;
+use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Generic\DAOSaveAction;
 use Civi\Api4\Generic\DAOUpdateAction;
 
@@ -32,6 +33,8 @@ interface DAOActionFactoryInterface {
   public function delete(string $entityName): DAODeleteAction;
 
   public function get(string $entityName): DAOGetAction;
+
+  public function getFields(string $entityName): DAOGetFieldsAction;
 
   public function save(string $entityName): DAOSaveAction;
 

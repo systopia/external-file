@@ -23,6 +23,7 @@ use Civi\Api4\ExternalFile;
 use Civi\Api4\Generic\BasicGetFieldsAction;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\ExternalFile\Api4\Api4Interface;
+use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
 
 /**
  * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null>&array{name: string}
@@ -31,9 +32,12 @@ final class GetFieldsAction extends BasicGetFieldsAction {
 
   private Api4Interface $api4;
 
-  public function __construct(Api4Interface $api4) {
+  private DAOActionFactoryInterface $daoActionFactory;
+
+  public function __construct(Api4Interface $api4, DAOActionFactoryInterface $daoActionFactory) {
     parent::__construct(ExternalFile::NAME, 'getFields');
     $this->api4 = $api4;
+    $this->daoActionFactory = $daoActionFactory;
   }
 
   /**
@@ -48,7 +52,8 @@ final class GetFieldsAction extends BasicGetFieldsAction {
    */
   protected function getRecords(): array {
     $fileFields = $this->api4->getEntityFields('File', $this->action);
-    $action = (new DAOGetFieldsAction($this->getEntityName(), $this->getActionName()))
+    $action = $this->daoActionFactory->getFields($this->getEntityName())
+      ->setCheckPermissions(FALSE)
       ->setAction($this->action)
       ->setValues($this->values)
       ->setSelect($this->select)

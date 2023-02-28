@@ -37,6 +37,7 @@ final class ExternalFileManager implements ExternalFileManagerInterface {
 
   public function get(int $id): ?ExternalFileEntity {
     $action = $this->daoActionFactory->get('ExternalFile')
+      ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $id);
     $result = $this->api4->executeAction($action);
     $values = $result->first();
@@ -62,7 +63,12 @@ final class ExternalFileManager implements ExternalFileManagerInterface {
   }
 
   public function update(ExternalFileEntity $externalFile): void {
-    $result = $this->api4->updateEntity('ExternalFile', $externalFile->getId(), $externalFile->toArray());
+    $result = $this->api4->updateEntity(
+      'ExternalFile',
+      $externalFile->getId(),
+      $externalFile->toArray(),
+      ['checkPermissions' => FALSE],
+    );
     // @phpstan-ignore-next-line
     $externalFile->setValues($result->single());
   }

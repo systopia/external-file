@@ -72,6 +72,7 @@ final class AttachmentManager implements AttachmentManagerInterface {
 
     $externalFile->setFileId($attachment->getId());
     $externalFileUpdateAction = $this->daoActionFactory->update('ExternalFile')
+      ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $externalFile->getId())
       ->addValue('file_id', $externalFile->getFileId());
     $this->api4->executeAction($externalFileUpdateAction);
@@ -109,7 +110,12 @@ final class AttachmentManager implements AttachmentManagerInterface {
    */
   public function update(AttachmentEntity $attachment): void {
     // Attachment API has no update action, so we have to directly use File.
-    $this->api4->updateEntity('File', $attachment->getId(), $attachment->toArray());
+    $this->api4->updateEntity(
+      'File',
+      $attachment->getId(),
+      $attachment->toArray(),
+      ['checkPermissions' => FALSE],
+    );
   }
 
   /**
