@@ -17,16 +17,23 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+use Civi\ExternalFile\AbstractExternalFileHeadlessTestCase;
+use Civi\Test\Api3TestTrait;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+/**
+ * ExternalFile.run_download_job API Test Case
+ *
+ * @covers \civicrm_api3_external_file_run_download_job()
+ *
+ * @group headless
+ */
+class api_v3_ExternalFile_RunDownloadJob_Test extends AbstractExternalFileHeadlessTestCase {
+  use Api3TestTrait;
 
-interface ExternalFileDownloaderInterface {
-
-  /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
-   */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function test(): void {
+    $result = civicrm_api3('ExternalFile', 'run_download_job', ['retries' => '2']);
+    // @phpstan-ignore-next-line
+    $this->assertAPISuccess($result);
+  }
 
 }

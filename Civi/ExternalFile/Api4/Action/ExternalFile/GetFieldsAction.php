@@ -21,7 +21,6 @@ namespace Civi\ExternalFile\Api4\Action\ExternalFile;
 
 use Civi\Api4\ExternalFile;
 use Civi\Api4\Generic\BasicGetFieldsAction;
-use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\ExternalFile\Api4\Api4Interface;
 use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
 
@@ -75,7 +74,8 @@ final class GetFieldsAction extends BasicGetFieldsAction {
     }
 
     $fields[] = [
-      'type' => 'Extra',
+      // Changed from 'Extra' to 'Custom', so it is not treated as field in DAOGetAction
+      'type' => 'Custom',
       'entity' => 'ExternalFile',
       'required' => FALSE,
       'nullable' => FALSE,

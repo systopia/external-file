@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\ExternalFile;
 
 use Civi\ExternalFile\Entity\ExternalFileEntity;
+use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
+use Civi\ExternalFile\Lock\LockFactoryInterface;
 use CRM_Utils_HttpClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
@@ -32,6 +34,7 @@ final class ExternalFileDownloader implements ExternalFileDownloaderInterface {
 
   private CRM_Utils_HttpClient $httpClient;
 
+  private LockFactoryInterface $lockFactory;
 
   private LoggerInterface $logger;
 
@@ -41,12 +44,14 @@ final class ExternalFileDownloader implements ExternalFileDownloaderInterface {
     AttachmentManagerInterface $attachmentManager,
     ExternalFileManagerInterface $externalFileManager,
     CRM_Utils_HttpClient $httpClient,
+    LockFactoryInterface $lockFactory,
     LoggerInterface $logger,
     MimeTypeGuesserInterface $mimeTypeGuesser
   ) {
     $this->attachmentManager = $attachmentManager;
     $this->externalFileManager = $externalFileManager;
     $this->httpClient = $httpClient;
+    $this->lockFactory = $lockFactory;
     $this->logger = $logger;
     $this->mimeTypeGuesser = $mimeTypeGuesser;
   }
@@ -55,9 +60,9 @@ final class ExternalFileDownloader implements ExternalFileDownloaderInterface {
    * @inheritDoc
    */
   public function download(ExternalFileEntity $externalFile): void {
-    $this->externalFileManager->refresh($externalFile);
-    if (ExternalFileStatus::DOWNLOADING === $externalFile->getStatus()) {
-      throw new \RuntimeException('Download is already in progress');
+    $lock = $this->lockFactory->createLock('civicrm.external-file.download.' . $externalFile->getId());
+    if (!$lock->tryLock()) {
+      throw new DownloadAlreadyInProgressException('Download is already in progress');
     }
 
     $this->logger->info(sprintf('Start downloading "%s".', $externalFile->getSource()), [

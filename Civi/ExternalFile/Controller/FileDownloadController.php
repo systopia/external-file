@@ -23,6 +23,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\ExternalFile\AttachmentManagerInterface;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\Event\AuthorizeFileDownloadEvent;
+use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
 use Civi\ExternalFile\ExternalFileDownloaderInterface;
 use Civi\ExternalFile\ExternalFileManagerInterface;
 use Civi\ExternalFile\ExternalFileStatus;
@@ -71,17 +72,19 @@ final class FileDownloadController {
       return new Response(Response::$statusTexts[Response::HTTP_FORBIDDEN], Response::HTTP_FORBIDDEN);
     }
 
-    if (ExternalFileStatus::DOWNLOADING === $externalFile->getStatus()) {
-      $this->waitForFinishDownload($externalFile);
-      if (ExternalFileStatus::DOWNLOADING === $externalFile->getStatus()) {
-        return new Response(
-          Response::$statusTexts[Response::HTTP_GATEWAY_TIMEOUT],
-          Response::HTTP_GATEWAY_TIMEOUT
-        );
+    if (ExternalFileStatus::AVAILABLE !== $externalFile->getStatus()) {
+      try {
+        $this->externalFileDownloader->download($externalFile);
       }
-    }
-    elseif (ExternalFileStatus::AVAILABLE !== $externalFile->getStatus()) {
-      $this->externalFileDownloader->download($externalFile);
+      catch (DownloadAlreadyInProgressException $e) {
+        $this->waitForFinishDownload($externalFile);
+        if (ExternalFileStatus::DOWNLOADING === $externalFile->getStatus()) {
+          return new Response(
+            Response::$statusTexts[Response::HTTP_GATEWAY_TIMEOUT],
+            Response::HTTP_GATEWAY_TIMEOUT
+          );
+        }
+      }
     }
 
     if (ExternalFileStatus::AVAILABLE !== $externalFile->getStatus()) {

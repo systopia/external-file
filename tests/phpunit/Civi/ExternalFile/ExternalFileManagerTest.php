@@ -23,6 +23,8 @@ use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\ExternalFile\Api4\Api4Interface;
 use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
+use Civi\ExternalFile\Api4\Query\Comparison;
+use Civi\ExternalFile\Api4\Query\ConditionInterface;
 use Civi\ExternalFile\EntityFactory\ExternalFileFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -65,6 +67,15 @@ final class ExternalFileManagerTest extends TestCase {
     static::assertNull($this->externalFileManager->get(12));
   }
 
+  public function testGetBy(): void {
+    $externalFile1 = ExternalFileFactory::create(['id' => 1]);
+    $externalFile2 = ExternalFileFactory::create(['id' => 2]);
+    $condition = Comparison::new('extension', '=', 'foo');
+    $this->mockGetBy($condition, [$externalFile1->toArray(), $externalFile2->toArray()]);
+
+    static::assertEquals([$externalFile1, $externalFile2], $this->externalFileManager->getBy($condition));
+  }
+
   public function testGetByIdAndFilename(): void {
     $externalFile = ExternalFileFactory::create();
     $this->mockGet(12, $externalFile->toArray(), 2);
@@ -96,6 +107,14 @@ final class ExternalFileManagerTest extends TestCase {
    * @phpstan-param array<string, mixed>|null $record
    */
   private function mockGet(int $id, ?array $record, int $times = 1): void {
+    $records = NULL === $record ? [] : [$record];
+    $this->mockGetBy(Comparison::new('id', '=', $id), $records, $times);
+  }
+
+  /**
+   * @phpstan-param array<array<string, mixed>> $records
+   */
+  private function mockGetBy(ConditionInterface $condition, array $records, int $times = 1): void {
     $getAction = NULL;
     $this->daoActionFactoryMock->expects(static::exactly($times))->method('get')
       ->with('ExternalFile')
@@ -104,14 +123,14 @@ final class ExternalFileManagerTest extends TestCase {
       });
 
     $this->api4Mock->expects(static::exactly($times))->method('executeAction')->with(
-      static::callback(function (DAOGetAction $action) use (&$getAction, $id) {
+      static::callback(function (DAOGetAction $action) use (&$getAction, $condition) {
         static::assertSame($getAction, $action);
         static::assertSame('ExternalFile', $action->getEntityName());
-        static::assertSame([['id', '=', $id, FALSE]], $action->getWhere());
+        static::assertSame([$condition->toArray()], $action->getWhere());
 
         return TRUE;
       })
-    )->willReturn(NULL === $record ? new Result() : new Result([$record]));
+    )->willReturn(new Result($records));
   }
 
 }

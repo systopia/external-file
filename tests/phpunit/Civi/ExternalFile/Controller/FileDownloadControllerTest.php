@@ -25,6 +25,7 @@ use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\EntityFactory\AttachmentFactory;
 use Civi\ExternalFile\EntityFactory\ExternalFileFactory;
 use Civi\ExternalFile\Event\AuthorizeFileDownloadEvent;
+use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
 use Civi\ExternalFile\ExternalFileDownloaderInterface;
 use Civi\ExternalFile\ExternalFileManagerInterface;
 use Civi\ExternalFile\ExternalFileStatus;
@@ -164,7 +165,10 @@ final class FileDownloadControllerTest extends TestCase {
 
     $this->mockAuthorized();
 
-    $this->externalFileDownloaderMock->expects(static::never())->method('download');
+    $this->externalFileDownloaderMock->expects(static::once())->method('download')
+      ->with($externalFile)
+      ->willThrowException(new DownloadAlreadyInProgressException());
+
     $this->externalFileManagerMock->expects(static::once())->method('refresh')
       ->with(static::callback(function (ExternalFileEntity $externalFile) {
         $externalFile->setStatus(ExternalFileStatus::AVAILABLE);
@@ -199,7 +203,10 @@ final class FileDownloadControllerTest extends TestCase {
 
     $this->mockAuthorized();
 
-    $this->externalFileDownloaderMock->expects(static::never())->method('download');
+    $this->externalFileDownloaderMock->expects(static::once())->method('download')
+      ->with($externalFile)
+      ->willThrowException(new DownloadAlreadyInProgressException());
+
     $this->externalFileManagerMock->expects(static::exactly(5))->method('refresh')
       ->with($externalFile);
 

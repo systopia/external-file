@@ -17,16 +17,22 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Lock;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+interface LockInterface {
 
-interface ExternalFileDownloaderInterface {
+  public function isLocked(): bool;
 
   /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
+   * Blocking lock request.
    */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function lock(): void;
+
+  /**
+   * Tries to acquire a lock without blocking.
+   *
+   * @return bool TRUE if lock is acquired.
+   */
+  public function tryLock(): bool;
 
 }

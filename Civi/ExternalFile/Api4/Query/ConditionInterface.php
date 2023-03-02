@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Api4\Query;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+/**
+ * @phpstan-type ComparisonT array{string, string, 2?: scalar|array<scalar>}
+ * Actually this should be: array{string, array<int, ComparisonT|CompositeConditionT>}, so that is not possible
+ * @phpstan-type CompositeConditionT array{string, array<int, array>}
+ */
+interface ConditionInterface {
 
-interface ExternalFileDownloaderInterface {
+  public function getOperator(): string;
 
   /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
+   *
+   * @phpstan-return ComparisonT|CompositeConditionT
    */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function toArray(): array;
 
 }

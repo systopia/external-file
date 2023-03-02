@@ -22,6 +22,9 @@ namespace Civi\ExternalFile;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\EntityFactory\AttachmentFactory;
 use Civi\ExternalFile\EntityFactory\ExternalFileFactory;
+use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
+use Civi\ExternalFile\Lock\LockFactoryInterface;
+use Civi\ExternalFile\Lock\LockInterface;
 use CRM_Utils_HttpClient;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,6 +53,11 @@ final class ExternalFileDownloaderTest extends TestCase {
    */
   private MockObject $httpClientMock;
 
+  /**
+   * @var \Civi\ExternalFile\Lock\LockFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $lockFactoryMock;
+
   private TestLogger $logger;
 
   /**
@@ -62,23 +70,23 @@ final class ExternalFileDownloaderTest extends TestCase {
     $this->attachmentManagerMock = $this->createMock(AttachmentManagerInterface::class);
     $this->externalFileManagerMock = $this->createMock(ExternalFileManagerInterface::class);
     $this->httpClientMock = $this->createMock(CRM_Utils_HttpClient::class);
+    $this->lockFactoryMock = $this->createMock(LockFactoryInterface::class);
     $this->logger = new TestLogger();
     $this->mimeTypeGuesserMock = $this->createMock(MimeTypeGuesserInterface::class);
     $this->downloader = new ExternalFileDownloader(
       $this->attachmentManagerMock,
       $this->externalFileManagerMock,
       $this->httpClientMock,
+      $this->lockFactoryMock,
       $this->logger,
       $this->mimeTypeGuesserMock,
     );
   }
 
   public function testDownload(): void {
+    $this->mockLock();
     $externalFile = ExternalFileFactory::create();
     $attachment = AttachmentFactory::create();
-
-    $this->externalFileManagerMock->expects(static::once())->method('refresh')
-      ->with($externalFile);
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
       ->withConsecutive(
@@ -127,10 +135,8 @@ final class ExternalFileDownloaderTest extends TestCase {
   }
 
   public function testDownloadError(): void {
+    $this->mockLock();
     $externalFile = ExternalFileFactory::create();
-
-    $this->externalFileManagerMock->expects(static::once())->method('refresh')
-      ->with($externalFile);
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
       ->withConsecutive(
@@ -173,10 +179,8 @@ final class ExternalFileDownloaderTest extends TestCase {
   }
 
   public function testDownloadException(): void {
+    $this->mockLock();
     $externalFile = ExternalFileFactory::create();
-
-    $this->externalFileManagerMock->expects(static::once())->method('refresh')
-      ->with($externalFile);
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
       ->withConsecutive(
@@ -230,21 +234,22 @@ final class ExternalFileDownloaderTest extends TestCase {
   }
 
   public function testDownloadAlreadyDownloading(): void {
+    $this->mockLock(FALSE);
     $externalFile = ExternalFileFactory::create();
-
-    $this->externalFileManagerMock->expects(static::once())->method('refresh')
-      ->with(static::callback(function (ExternalFileEntity $externalFile) {
-        $externalFile->setStatus(ExternalFileStatus::DOWNLOADING);
-
-        return TRUE;
-      }));
 
     $this->externalFileManagerMock->expects(static::never())->method('update');
 
-    $this->expectException(\RuntimeException::class);
+    $this->expectException(DownloadAlreadyInProgressException::class);
     $this->expectExceptionMessage('Download is already in progress');
     $this->downloader->download($externalFile);
 
+  }
+
+  private function mockLock(bool $canLock = TRUE): void {
+    $lockMock = $this->createMock(LockInterface::class);
+    $lockMock->expects(static::once())->method('tryLock')->willReturn($canLock);
+    $this->lockFactoryMock->method('createLock')
+      ->willReturn($lockMock);
   }
 
 }

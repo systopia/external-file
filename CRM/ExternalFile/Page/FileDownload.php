@@ -9,7 +9,7 @@ class CRM_ExternalFile_Page_FileDownload extends CRM_Core_Page {
 
   public function run(): void {
     /** @var \Civi\ExternalFile\Controller\FileDownloadController $controller */
-    $controller = Civi::service(FileDownloadController::class);
+    $controller = \Civi::service(FileDownloadController::class);
     $externalFileId = $this->urlPath[3] ?? NULL;
     $filename = $this->urlPath[4] ?? NULL;
 

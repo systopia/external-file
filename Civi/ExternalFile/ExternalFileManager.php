@@ -21,6 +21,8 @@ namespace Civi\ExternalFile;
 
 use Civi\ExternalFile\Api4\Api4Interface;
 use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
+use Civi\ExternalFile\Api4\Query\Comparison;
+use Civi\ExternalFile\Api4\Query\ConditionInterface;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Webmozart\Assert\Assert;
 
@@ -36,14 +38,15 @@ final class ExternalFileManager implements ExternalFileManagerInterface {
   }
 
   public function get(int $id): ?ExternalFileEntity {
+    return $this->getBy(Comparison::new('id', '=', $id))[0] ?? NULL;
+  }
+
+  public function getBy(ConditionInterface $condition): array {
     $action = $this->daoActionFactory->get('ExternalFile')
       ->setCheckPermissions(FALSE)
-      ->addWhere('id', '=', $id);
-    $result = $this->api4->executeAction($action);
-    $values = $result->first();
+      ->setWhere([$condition->toArray()]);
 
-    // @phpstan-ignore-next-line
-    return NULL === $values ? NULL : ExternalFileEntity::fromArray($values);
+    return ExternalFileEntity::allFromApiResult($this->api4->executeAction($action));
   }
 
   public function getByIdAndFilename(int $id, string $filename): ?ExternalFileEntity {

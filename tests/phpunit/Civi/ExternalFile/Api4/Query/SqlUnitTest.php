@@ -17,16 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Api4\Query;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+use Civi\Api4\Query\Api4SelectQuery;
+use PHPUnit\Framework\TestCase;
 
-interface ExternalFileDownloaderInterface {
+/**
+ * @covers \Civi\ExternalFile\Api4\Query\SqlUnit
+ */
+final class SqlUnitTest extends TestCase {
 
-  /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
-   */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function testRender(): void {
+    $unit = new SqlUnit('HOUR');
+    static::assertSame('HOUR', $unit->render($this->createMock(Api4SelectQuery::class)));
+    static::assertSame('Unit', SqlUnit::getTitle());
+  }
 
 }

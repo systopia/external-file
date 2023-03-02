@@ -17,16 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Lock;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+interface LockFactoryInterface {
 
-interface ExternalFileDownloaderInterface {
-
-  /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
-   */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function createLock(string $key): LockInterface;
 
 }

@@ -17,16 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Exception;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
-
-interface ExternalFileDownloaderInterface {
-
-  /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
-   */
-  public function download(ExternalFileEntity $externalFile): void;
-
+final class DownloadAlreadyInProgressException extends \RuntimeException implements ExceptionInterface {
 }

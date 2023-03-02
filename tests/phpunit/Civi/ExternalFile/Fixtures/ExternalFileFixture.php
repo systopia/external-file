@@ -31,6 +31,7 @@ final class ExternalFileFixture {
   public static function addFixture(array $values = []): ExternalFileEntity {
     $action = new DAOCreateAction('ExternalFile', 'create');
     $action->setValues($values + [
+      'file_id' => NULL,
       'source' => 'https://example.org/test.txt',
       'filename' => 'test.txt',
       'status' => ExternalFileStatus::NEW,
@@ -40,10 +41,17 @@ final class ExternalFileFixture {
       'custom_data' => NULL,
       'last_modified' => NULL,
     ]);
-    $result = $action->execute();
+    $values = $action->execute()->single();
+    // Filter values added by CiviCRM in create.
+    unset($values['custom']);
+    unset($values['check_permissions']);
 
     // @phpstan-ignore-next-line
-    return ExternalFileEntity::fromArray($result->single());
+    $externalFile = ExternalFileEntity::fromArray($values);
+    // Reformat download start date.
+    $externalFile->setDownloadStartDate($externalFile->getDownloadStartDate());
+
+    return $externalFile;
   }
 
 }

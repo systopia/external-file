@@ -17,16 +17,33 @@
 
 declare(strict_types = 1);
 
-namespace Civi\ExternalFile;
+namespace Civi\ExternalFile\Api4\Query;
 
-use Civi\ExternalFile\Entity\ExternalFileEntity;
+use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Api4\Query\SqlExpression;
 
-interface ExternalFileDownloaderInterface {
+/**
+ * Used for the unit part of TIMESTAMPDIFF.
+ *
+ * @see \Civi\Api4\Query\SqlFunctionEXTERNALFILE_TIMESTAMPDIFF
+ */
+final class SqlUnit extends SqlExpression {
+
+  protected function initialize(): void {
+  }
 
   /**
-   * @throws \CRM_Core_Exception
-   * @throws \Civi\ExternalFile\Exception\DownloadAlreadyInProgressException
+   * @inheritDoc
    */
-  public function download(ExternalFileEntity $externalFile): void;
+  public function render(Api4SelectQuery $query): string {
+    return $this->expr;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function getTitle(): string {
+    return 'Unit';
+  }
 
 }

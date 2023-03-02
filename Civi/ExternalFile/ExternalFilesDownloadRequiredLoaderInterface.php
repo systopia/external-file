@@ -19,36 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile;
 
-use Civi\ExternalFile\Api4\Query\ConditionInterface;
-use Civi\ExternalFile\Entity\ExternalFileEntity;
-
-interface ExternalFileManagerInterface {
+interface ExternalFilesDownloadRequiredLoaderInterface {
 
   /**
-   * @throws \CRM_Core_Exception
-   */
-  public function get(int $id): ?ExternalFileEntity;
-
-  /**
-   * @phpstan-return array<ExternalFileEntity>
+   * Returns all ExternalFile entities for which a download is required.
+   *
+   * @param int $retries
+   *   Include files in download failed status if the download try count does
+   *   not exceed this value. The implementation might use a delay as additional
+   *   condition.
+   *
+   * @phpstan-return iterable<\Civi\ExternalFile\Entity\ExternalFileEntity>
    *
    * @throws \CRM_Core_Exception
    */
-  public function getBy(ConditionInterface $condition): array;
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function getByIdAndFilename(int $id, string $filename): ?ExternalFileEntity;
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function refresh(ExternalFileEntity $externalFile): void;
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function update(ExternalFileEntity $externalFile): void;
+  public function get(int $retries): iterable;
 
 }

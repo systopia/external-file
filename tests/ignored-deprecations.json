@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "location": "Symfony\\Component\\ErrorHandler\\DebugClassLoader::loadClass",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 2
+    },
+    {
+        "location": "Symfony\\Component\\ErrorHandler\\DebugClassLoader::loadClass",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
+        "count": 2
+    },
+    {
+        "location": "Civi\\Test\\CiviTestListenerPHPUnit7::startTestSuite",
+        "message": "The \"CRM_Batch_BAO_Batch::links()\" method will require a new \"array $new_links\" argument in the next major version of its parent class \"DB_DataObject\", not defining it is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Test\\CiviTestListenerPHPUnit7::startTestSuite",
+        "message": "The \"CRM_Activity_BAO_ActivityContact::links()\" method will require a new \"array $new_links\" argument in the next major version of its parent class \"DB_DataObject\", not defining it is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\Query\\SqlFunctionEXTERNALFILE_TIMESTAMPDIFFTest::test",
+        "message": "The \"Drupal\\Component\\EventDispatcher\\Event\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\Query\\SqlFunctionEXTERNALFILE_TIMESTAMPDIFFTest::test",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\Query\\SqlFunctionEXTERNALFILE_TIMESTAMPDIFFTest::test",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
+        "count": 1
+    }
+]

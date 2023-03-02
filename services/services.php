@@ -35,12 +35,17 @@ use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
 use Civi\ExternalFile\AttachmentManager;
 use Civi\ExternalFile\AttachmentManagerInterface;
 use Civi\ExternalFile\Controller\FileDownloadController;
+use Civi\ExternalFile\DownloadFilesJob;
 use Civi\ExternalFile\ExternalFileDownloader;
 use Civi\ExternalFile\ExternalFileDownloaderInterface;
 use Civi\ExternalFile\ExternalFileManager;
 use Civi\ExternalFile\ExternalFileManagerInterface;
+use Civi\ExternalFile\ExternalFilesDownloadRequiredLoader;
+use Civi\ExternalFile\ExternalFilesDownloadRequiredLoaderInterface;
 use Civi\ExternalFile\ExternalFileUriGenerator;
 use Civi\ExternalFile\ExternalFileUriGeneratorInterface;
+use Civi\ExternalFile\Lock\FlockFactory;
+use Civi\ExternalFile\Lock\LockFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypes;
@@ -66,7 +71,10 @@ if (!$container->has(CRM_Utils_HttpClient::class)) {
 $container->autowire(Api3Interface::class, Api3::class);
 $container->autowire(Api4Interface::class, Api4::class);
 $container->autowire(DAOActionFactoryInterface::class, DAOActionFactory::class);
+$container->autowire(LockFactoryInterface::class, FlockFactory::class);
 
+$container->autowire(DownloadFilesJob::class)
+  ->setPublic(TRUE);
 $container->autowire(FileDownloadController::class)
   ->setPublic(TRUE);
 
@@ -74,6 +82,7 @@ $container->autowire(AttachmentManagerInterface::class, AttachmentManager::class
 $container->autowire(ExternalFileManagerInterface::class, ExternalFileManager::class);
 $container->autowire(ExternalFileDownloaderInterface::class, ExternalFileDownloader::class);
 $container->autowire(ExternalFileUriGeneratorInterface::class, ExternalFileUriGenerator::class);
+$container->autowire(ExternalFilesDownloadRequiredLoaderInterface::class, ExternalFilesDownloadRequiredLoader::class);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)

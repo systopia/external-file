@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 ini_set('memory_limit', '2G');
 
+// Make CRM_ExternalFile_ExtensionUtil available.
+require_once __DIR__ . '/../../external_file.civix.php';
+
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable
@@ -17,6 +20,9 @@ $loader->add('api_', [__DIR__ . '/../..', __DIR__]);
 $loader->addPsr4('api\\', [__DIR__ . '/../../api', __DIR__ . '/api']);
 
 $loader->register();
+
+// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
+\CRM_Core_I18n::singleton();
 
 /**
  * Call the "cv" command.

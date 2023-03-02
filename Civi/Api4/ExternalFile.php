@@ -44,7 +44,12 @@ class ExternalFile extends AbstractEntity {
     return \Civi::service(UpdateAction::class);
   }
 
-  public static function permissions() {
+  /**
+   * @inheritDoc
+   *
+   * @phpstan-return array<string, array<string|string[]>>
+   */
+  public static function permissions(): array {
     return File::permissions();
   }
 
