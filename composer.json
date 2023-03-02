@@ -14,8 +14,8 @@
         "symfony/mime": ">=4.4"
     },
     "require-dev": {
-        "civicrm/civicrm-core": "^5.57",
-        "civicrm/civicrm-packages": "^5.57",
+        "civicrm/civicrm-core": "^5.58",
+        "civicrm/civicrm-packages": "^5.58",
         "fig/log-test": "^1"
     },
     "scripts": {
