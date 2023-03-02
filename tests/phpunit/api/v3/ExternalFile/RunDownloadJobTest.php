@@ -24,6 +24,7 @@ use Civi\Test\Api3TestTrait;
  * ExternalFile.run_download_job API Test Case
  *
  * @covers \civicrm_api3_external_file_run_download_job()
+ * @covers \_civicrm_api3_external_file_run_download_job_spec()
  *
  * @group headless
  */
@@ -34,6 +35,11 @@ class api_v3_ExternalFile_RunDownloadJob_Test extends AbstractExternalFileHeadle
     $result = civicrm_api3('ExternalFile', 'run_download_job', ['retries' => '2']);
     // @phpstan-ignore-next-line
     $this->assertAPISuccess($result);
+  }
+
+  public function testSpec(): void {
+    $result = civicrm_api3('ExternalFile', 'getfields', ['action' => 'run_download_job']);
+    static::assertSame(5, $result['values']['retries']['api.default']);
   }
 
 }

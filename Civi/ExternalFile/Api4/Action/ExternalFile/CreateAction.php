@@ -54,6 +54,8 @@ final class CreateAction extends DAOCreateAction {
     );
 
     $resultValues = $externalFile->toArray();
+    $resultValues['file_file_type_id'] = NULL;
+    $resultValues['file_document'] = NULL;
     foreach ($attachment->toArray() as $field => $value) {
       // Filter extra fields from Attachment.
       if ('path' === $field) {
@@ -80,6 +82,9 @@ final class CreateAction extends DAOCreateAction {
     Assert::notEmpty($this->values['filename']);
     $this->values['download_try_count'] ??= 0;
     $this->values['status'] ??= ExternalFileStatus::NEW;
+    $this->values['download_start_date'] ??= NULL;
+    $this->values['custom_data'] ??= NULL;
+    $this->values['last_modified'] ??= NULL;
 
     $result = new Result();
     parent::_run($result);

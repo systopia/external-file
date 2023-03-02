@@ -42,8 +42,9 @@ final class DeleteAction extends DAODeleteAction {
   protected function deleteObjects($items): array {
     $result = [];
     foreach ($items as $item) {
+      // Deletion of File entity is cascaded, so we do not need to delete ExternalFile entity explicitly.
       $this->attachmentManager->deleteByExternalFileId($item['id']);
-      $result = array_merge($result, parent::deleteObjects([$item]));
+      $result[] = ['id' => $item['id']];
     }
 
     return $result;

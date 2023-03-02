@@ -19,6 +19,7 @@
   </testsuites>
   <filter>
     <whitelist>
+      <directory suffix=".php">api</directory>
       <directory suffix=".php">CRM</directory>
       <directory suffix=".php">Civi</directory>
       <exclude>

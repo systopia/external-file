@@ -65,11 +65,14 @@ final class GetFieldsAction extends BasicGetFieldsAction {
     /** @phpstan-var array<fieldT> $fields */
     $fields = $externalFileFields->getArrayCopy();
 
-    if ('create' === $this->action) {
-      foreach ($fields as &$field) {
+    foreach ($fields as &$field) {
+      if ('create' === $this->action) {
         if (in_array($field['name'], ['filename', 'download_try_count', 'status'], TRUE)) {
           $field['required'] = FALSE;
         }
+      }
+      if ('file_id' === $field['name']) {
+        $field['description'] = ($field['description'] ?? '') . ' (Required when updating "file_" fields.)';
       }
     }
 

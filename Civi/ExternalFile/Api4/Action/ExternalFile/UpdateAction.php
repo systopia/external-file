@@ -31,7 +31,7 @@ final class UpdateAction extends DAOUpdateAction {
   private Api4Interface $api4;
 
   public function __construct(Api4Interface $api4) {
-    parent::__construct(ExternalFile::NAME, 'create');
+    parent::__construct(ExternalFile::NAME, 'update');
     $this->api4 = $api4;
   }
 
