@@ -89,12 +89,11 @@ final class FlockTest extends TestCase {
   }
 
   /**
-   * A locked flock will be released when child exits.
+   * A locked flock will be released when child exits. If pcntl_fork() is not
+   * available, $fallback will be returned instead.
    */
   private function tryLockInChildProcess(string $filename, bool $fallback): bool {
     if (!function_exists('pcntl_fork')) {
-      $this->addWarning('pcntl_fork is not available, test is incomplete.');
-
       return $fallback;
     }
 

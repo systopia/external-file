@@ -85,7 +85,6 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
       ->addWhere('filename', '=', 'testX.txt')->execute()
     );
 
-
     ExternalFile::update()
       ->addWhere('id', '=', $expected['id'] + 1)
       ->setValues([
@@ -126,7 +125,7 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
       ])->execute();
 
     static::assertCount(2, ExternalFile::get()->execute());
-    
+
     // Test "file_" field in where.
     static::assertCount(1, ExternalFile::get()
       ->addWhere('file_description', '=', 'file2')->execute()

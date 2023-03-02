@@ -39,6 +39,7 @@ class api_v3_ExternalFile_RunDownloadJob_Test extends AbstractExternalFileHeadle
 
   public function testSpec(): void {
     $result = civicrm_api3('ExternalFile', 'getfields', ['action' => 'run_download_job']);
+    // @phpstan-ignore-next-line
     static::assertSame(5, $result['values']['retries']['api.default']);
   }
 
