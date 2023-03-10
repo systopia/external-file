@@ -61,7 +61,7 @@ final class AttachmentManager implements AttachmentManagerInterface {
       // mime_type is required by Attachment entity.
       'mime_type' => $mimeType ?? 'application/octet-stream',
       'description' => $description,
-      'createdId' => $createdId,
+      'created_id' => $createdId,
       // Ensure path is returned.
       'check_permissions' => FALSE,
     ];
