@@ -62,13 +62,14 @@ final class AttachmentManager implements AttachmentManagerInterface {
       'mime_type' => $mimeType ?? 'application/octet-stream',
       'description' => $description,
       'created_id' => $createdId,
+      'sequential' => 1,
       // Ensure path is returned.
       'check_permissions' => FALSE,
     ];
 
-    /** @phpstan-var array{count: int, id: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'create', $values);
-    $attachment = $this->createAttachmentFromResult($result);
+    // @phpstan-ignore-next-line
+    $attachment = AttachmentEntity::fromApi3Values($result['values'][0]);
 
     $externalFile->setFileId($attachment->getId());
     $externalFileUpdateAction = $this->daoActionFactory->update('ExternalFile')
@@ -94,15 +95,16 @@ final class AttachmentManager implements AttachmentManagerInterface {
    * @inheritDoc
    */
   public function getByExternalFileId(int $externalFileId): ?AttachmentEntity {
-    /** @phpstan-var array{count: int, id: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
       'entity_table' => 'civicrm_external_file',
       'entity_id' => $externalFileId,
+      'sequential' => 1,
       // Ensure path is returned.
       'check_permissions' => FALSE,
     ]);
 
-    return 1 === $result['count'] ? $this->createAttachmentFromResult($result) : NULL;
+    // @phpstan-ignore-next-line
+    return 1 === $result['count'] ? AttachmentEntity::fromApi3Values($result['values'][0]) : NULL;
   }
 
   /**
@@ -124,41 +126,18 @@ final class AttachmentManager implements AttachmentManagerInterface {
   public function writeContent(ExternalFileEntity $externalFile, string $content): AttachmentEntity {
     // Even though the action is named "create" the underling File entity won't
     // be changed in this case.
-    /** @phpstan-var array{id: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'create', [
       'id' => $externalFile->getFileId(),
       'entity_table' => 'civicrm_external_file',
       'entity_id' => $externalFile->getId(),
       'content' => $content,
+      'sequential' => 1,
       // Ensure path is returned.
       'check_permissions' => FALSE,
     ]);
 
-    return $this->createAttachmentFromResult($result);
-  }
-
-  /**
-   * @phpstan-param array{id: int, values: array<int, array<string, mixed>>} $result
-   */
-  private function createAttachmentFromResult(array $result): AttachmentEntity {
-    $values = $result['values'][$result['id']];
-    if ('' === $values['description']) {
-      // Empty string is returned, when description is NULL.
-      $values['description'] = NULL;
-    }
-    // Integers are returned as strings.
     // @phpstan-ignore-next-line
-    $values['id'] = (int) $values['id'];
-    // @phpstan-ignore-next-line
-    $values['entity_id'] = (int) $values['entity_id'];
-    // @phpstan-ignore-next-line
-    $values['created_id'] = (int) $values['created_id'];
-    if (0 === $values['created_id']) {
-      $values['created_id'] = NULL;
-    }
-
-    // @phpstan-ignore-next-line
-    return AttachmentEntity::fromArray($values);
+    return AttachmentEntity::fromApi3Values($result['values'][0]);
   }
 
 }

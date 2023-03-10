@@ -38,6 +38,37 @@ namespace Civi\ExternalFile\Entity;
  */
 final class AttachmentEntity extends AbstractEntity {
 
+  /**
+   * @phpstan-param array{
+   *   id: string,
+   *   mime_type: string,
+   *   description: ?string,
+   *   upload_date: string,
+   *   entity_table: string,
+   *   entity_id: string,
+   *   url: string,
+   *   path: string,
+   *   created_id: ?string,
+   * } $values
+   *
+   * @return static
+   */
+  public static function fromApi3Values(array $values): self {
+    if ('' === $values['description']) {
+      // Empty string is returned, when description is NULL.
+      $values['description'] = NULL;
+    }
+    // Integers are returned as strings.
+    $values['id'] = (int) $values['id'];
+    $values['entity_id'] = (int) $values['entity_id'];
+    $values['created_id'] = (int) $values['created_id'];
+    if (0 === $values['created_id']) {
+      $values['created_id'] = NULL;
+    }
+
+    return self::fromArray($values);
+  }
+
   public function getMimeType(): string {
     return $this->values['mime_type'];
   }
