@@ -17,10 +17,23 @@
 
 declare(strict_types = 1);
 
-// Prevent error "Class \API_Exception not found".
-// (Seems to happen because of class aliases not detected in scanned files.)
-require_once __DIR__ . '/vendor/civicrm/civicrm-core/CRM/Core/Exception.php';
-require_once __DIR__ . '/vendor/civicrm/civicrm-core/api/Exception.php';
+// phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
+/** @var \PHPStan\DependencyInjection\Container $container */
+/** @phpstan-var array<string> $bootstrapFiles */
+$bootstrapFiles = $container->getParameter('bootstrapFiles');
+foreach ($bootstrapFiles as $bootstrapFile) {
+  if (str_ends_with($bootstrapFile, 'vendor/autoload.php')) {
+    $vendorDir = dirname($bootstrapFile);
+    $civiCrmCoreDir = $vendorDir . '/civicrm/civicrm-core';
+    if (file_exists($civiCrmCoreDir)) {
+      // $bootstrapFile might not be included, yet. It is required for the
+      // following require_once, though.
+      require_once $bootstrapFile;
+      // Prevent error "Class 'CRM_Core_Exception' not found in file".
+      require_once $civiCrmCoreDir . '/CRM/Core/Exception.php';
+      set_include_path(get_include_path() . PATH_SEPARATOR . $civiCrmCoreDir);
 
-// Methods in DB_DataObject are not known, otherwise
-require_once __DIR__ . '/vendor/civicrm/civicrm-packages/DB/DataObject.php';
+      break;
+    }
+  }
+}

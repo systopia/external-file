@@ -14,15 +14,14 @@ parameters:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
-		- vendor/civicrm/civicrm-core/
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
-		- vendor/autoload.php
 		- phpstanBootstrap.php
 	stubFiles:
 		- stubs/AbstractAction.stub
 		- stubs/CiviEventDispatcherInterface.stub
-		- vendor/symfony/event-dispatcher-contracts/Event.php
+		- stubs/Event.stub
+		- stubs/StoppableEventInterface.stub
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true

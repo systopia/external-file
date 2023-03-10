@@ -9,14 +9,27 @@
         }
     },
     "require": {
-        "webmozart/assert": "^1.11",
-        "symfony/http-foundation": ">=4.4",
-        "symfony/mime": ">=4.4"
-    },
-    "require-dev": {
-        "fig/log-test": "^1"
+        "civicrm/civicrm-core": "^5.58",
+        "civicrm/civicrm-packages": "^5.58"
     },
     "scripts": {
+        "post-install-or-update": [
+            "# The following statements are only necessary when the extension is inside a CiviCRM installation, actually not required in CI.",
+            "# Avoid redeclaration of function \\GuzzleHttp\\http_build_query()",
+            "if [ -e vendor/civicrm/civicrm-core/guzzle_php81_shim.php ]; then echo '' >vendor/civicrm/civicrm-core/guzzle_php81_shim.php; fi",
+            "# Avoid redeclaration of function \\GuzzleHttp\\Promise\\queue()",
+            "if [ -e vendor/guzzlehttp/promises/src/functions.php ]; then echo '' >vendor/guzzlehttp/promises/src/functions.php; fi",
+            "# Avoid CiviCRM load extensions in vendor",
+            "if [ -e vendor/civicrm ]; then find vendor/civicrm -name 'info.xml' -delete; fi",
+            "# Avoid Class 'CRM_AfformAdmin_ExtensionUtil' not found",
+            "find vendor -name '*.mgd.php' -delete"
+        ],
+        "post-install-cmd": [
+            "@post-install-or-update"
+        ],
+        "post-update-cmd": [
+            "@post-install-or-update"
+        ],
         "composer-phpcs": [
             "@composer --working-dir=tools/phpcs"
         ],
