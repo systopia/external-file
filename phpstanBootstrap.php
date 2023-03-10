@@ -26,12 +26,12 @@ foreach ($bootstrapFiles as $bootstrapFile) {
     $vendorDir = dirname($bootstrapFile);
     $civiCrmCoreDir = $vendorDir . '/civicrm/civicrm-core';
     if (file_exists($civiCrmCoreDir)) {
+      set_include_path(get_include_path() . PATH_SEPARATOR . $civiCrmCoreDir);
       // $bootstrapFile might not be included, yet. It is required for the
       // following require_once, though.
       require_once $bootstrapFile;
       // Prevent error "Class 'CRM_Core_Exception' not found in file".
       require_once $civiCrmCoreDir . '/CRM/Core/Exception.php';
-      set_include_path(get_include_path() . PATH_SEPARATOR . $civiCrmCoreDir);
 
       break;
     }
