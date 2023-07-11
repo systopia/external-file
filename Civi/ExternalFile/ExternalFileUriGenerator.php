@@ -11,12 +11,16 @@ use CRM_Utils_System;
 final class ExternalFileUriGenerator implements ExternalFileUriGeneratorInterface {
 
   public function generateDownloadUri(int $externalFileId, string $externalFilename): string {
-    return CRM_Utils_System::url(
-      sprintf('civicrm/external-file/download/%d/%s', $externalFileId, $externalFilename),
-      '',
-      TRUE,
-      NULL,
-      FALSE,
+    // Remove the "?" that is added to the URI even though there's no query.
+    return rtrim(
+      CRM_Utils_System::url(
+        sprintf('civicrm/external-file/download/%d/%s', $externalFileId, $externalFilename),
+        '',
+        TRUE,
+        NULL,
+        FALSE,
+      ),
+      '?'
     );
   }
 
