@@ -71,6 +71,13 @@ final class AttachmentManager implements AttachmentManagerInterface {
     // @phpstan-ignore-next-line
     $attachment = AttachmentEntity::fromApi3Values($result['values'][0]);
 
+    if (\CRM_Core_Transaction::isActive()) {
+      \CRM_Core_Transaction::addCallback(
+        \CRM_Core_Transaction::PHASE_PRE_ROLLBACK,
+        fn() => file_exists($attachment->getPath()) && @unlink($attachment->getPath()),
+      );
+    }
+
     $externalFile->setFileId($attachment->getId());
     $externalFileUpdateAction = $this->daoActionFactory->update('ExternalFile')
       ->setCheckPermissions(FALSE)
