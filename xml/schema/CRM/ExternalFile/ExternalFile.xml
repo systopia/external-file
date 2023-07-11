@@ -67,6 +67,23 @@
   </field>
 
   <field>
+    <name>identifier</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>Unique identifier in combination with extension</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+  <index>
+    <name>UI_external_file_extension_identifier</name>
+    <fieldName>extension</fieldName>
+    <fieldName>identifier</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
     <name>custom_data</name>
     <type>text</type>
     <required>false</required>

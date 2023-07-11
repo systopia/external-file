@@ -39,6 +39,7 @@ CREATE TABLE `civicrm_external_file` (
   `source` varchar(255) NOT NULL COMMENT 'Source URI',
   `filename` varchar(255) NOT NULL COMMENT 'Filename in download URI',
   `extension` varchar(255) NOT NULL COMMENT 'The extension that added the file',
+  `identifier` varchar(255) NOT NULL COMMENT 'Unique identifier in combination with extension',
   `custom_data` text NULL COMMENT 'Optional additional data',
   `status` varchar(64) NOT NULL,
   `download_start_date` datetime,
@@ -46,6 +47,7 @@ CREATE TABLE `civicrm_external_file` (
   `last_modified` varchar(255) COMMENT 'Date used in Last-Modified header',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `UI_external_file_file_id`(file_id),
+  UNIQUE INDEX `UI_external_file_extension_identifier`(extension, identifier),
   CONSTRAINT FK_civicrm_external_file_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;

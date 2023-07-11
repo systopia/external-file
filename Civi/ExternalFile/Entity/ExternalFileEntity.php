@@ -26,6 +26,7 @@ namespace Civi\ExternalFile\Entity;
  *   source: string,
  *   filename: string,
  *   extension: string,
+ *   identifier: string,
  *   custom_data: ?array<mixed>,
  *   status: string,
  *   download_start_date: ?string,
@@ -62,6 +63,10 @@ final class ExternalFileEntity extends AbstractEntity {
 
   public function getExtension(): string {
     return $this->values['extension'];
+  }
+
+  public function getIdentifier(): string {
+    return $this->values['identifier'];
   }
 
   /**

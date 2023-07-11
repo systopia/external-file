@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile\EntityFactory;
 
+use Civi\ExternalFile\Api4\Util\Uuid;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\ExternalFileStatus;
 
@@ -55,6 +56,7 @@ final class ExternalFileFactory {
       'download_start_date' => NULL,
       'download_try_count' => 0,
       'extension' => 'test',
+      'identifier' => Uuid::generateRandom(),
       'custom_data' => NULL,
       'last_modified' => NULL,
     ]);
