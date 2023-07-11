@@ -22,6 +22,7 @@ namespace Civi\ExternalFile;
 use Civi\ExternalFile\Api3\Api3Interface;
 use Civi\ExternalFile\Api4\Api4Interface;
 use Civi\ExternalFile\Api4\DAOActionFactoryInterface;
+use Civi\ExternalFile\Api4\Util\Uuid;
 use Civi\ExternalFile\Entity\AttachmentEntity;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 
@@ -31,7 +32,14 @@ final class AttachmentManager implements AttachmentManagerInterface {
 
   private Api4Interface $api4;
 
+  private bool $commitDeleteCallbackRegistered = FALSE;
+
   private DAOActionFactoryInterface $daoActionFactory;
+
+  /**
+   * @phpstan-var array<int>
+   */
+  private array $preDeletedExternalFileIds = [];
 
   public function __construct(
     Api3Interface $api3,
@@ -92,10 +100,23 @@ final class AttachmentManager implements AttachmentManagerInterface {
    * @inheritDoc
    */
   public function deleteByExternalFileId(int $externalFileId): void {
-    $this->api3->execute('Attachment', 'delete', [
-      'entity_table' => 'civicrm_external_file',
-      'entity_id' => $externalFileId,
-    ]);
+    if (\CRM_Core_Transaction::isActive()) {
+      // Executed on post commit so files on file system will only be deleted on
+      // successful transaction.
+      $this->registerCommitDeleteCallback();
+      $this->preDeletedExternalFileIds[] = $externalFileId;
+      // Deletion of ExternalFile is cascaded. We change the identifier, so it
+      // can be reused before actual deletion.
+      $this->api4->updateEntity(
+        'ExternalFile',
+        $externalFileId,
+        ['identifier' => Uuid::generateRandom()],
+        ['checkPermissions' => FALSE],
+      );
+    }
+    else {
+      $this->doDeleteByExternalFileId($externalFileId);
+    }
   }
 
   /**
@@ -112,6 +133,13 @@ final class AttachmentManager implements AttachmentManagerInterface {
 
     // @phpstan-ignore-next-line
     return 1 === $result['count'] ? AttachmentEntity::fromApi3Values($result['values'][0]) : NULL;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public  function getPreDeletedExternalFileIds(): array {
+    return $this->preDeletedExternalFileIds;
   }
 
   /**
@@ -145,6 +173,49 @@ final class AttachmentManager implements AttachmentManagerInterface {
 
     // @phpstan-ignore-next-line
     return AttachmentEntity::fromApi3Values($result['values'][0]);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function doDeleteByExternalFileId(int $externalFileId): void {
+    $this->api3->execute('Attachment', 'delete', [
+      'entity_table' => 'civicrm_external_file',
+      'entity_id' => $externalFileId,
+    ]);
+  }
+
+  /**
+   * @internal
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function deleteOnPostCommit(): void {
+    $this->commitDeleteCallbackRegistered = FALSE;
+    foreach ($this->preDeletedExternalFileIds as $id) {
+      $this->doDeleteByExternalFileId($id);
+    }
+
+    $this->preDeletedExternalFileIds = [];
+  }
+
+  private function registerCommitDeleteCallback(): void {
+    if (!$this->commitDeleteCallbackRegistered) {
+      \CRM_Core_Transaction::addCallback(
+      \CRM_Core_Transaction::PHASE_PRE_ROLLBACK,
+        function () {
+          $this->preDeletedExternalFileIds = [];
+          $this->commitDeleteCallbackRegistered = FALSE;
+        },
+      );
+
+      \CRM_Core_Transaction::addCallback(
+        \CRM_Core_Transaction::PHASE_POST_COMMIT,
+        [$this, 'deleteOnPostCommit'],
+      );
+
+      $this->commitDeleteCallbackRegistered = TRUE;
+    }
   }
 
 }

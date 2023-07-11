@@ -72,8 +72,10 @@ final class AttachmentManagerTest extends AbstractExternalFileHeadlessTestCase {
       static::assertSame('test', file_get_contents($attachment->getPath()));
 
       $this->attachmentManager->deleteByExternalFileId($externalFile->getId());
+      static::assertFileExists($attachment->getPath());
+      static::assertCount(1, File::get()->addWhere('id', '=', $attachment->getId())->execute());
+      $this->attachmentManager->deleteOnPostCommit();
       static::assertFileDoesNotExist($attachment->getPath());
-
       static::assertCount(0, File::get()->addWhere('id', '=', $attachment->getId())->execute());
     }
     finally {

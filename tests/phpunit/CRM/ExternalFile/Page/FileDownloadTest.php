@@ -87,6 +87,7 @@ class CRM_ExternalFile_Page_FileDownloadTest extends AbstractExternalFileHeadles
     finally {
       // Ensure file is removed from filesystem.
       $this->attachmentManager->deleteByExternalFileId($externalFile->getId());
+      $this->attachmentManager->deleteOnPostCommit();
     }
   }
 

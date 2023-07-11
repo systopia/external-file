@@ -22,14 +22,21 @@ namespace Civi\ExternalFile\Api4\Action\ExternalFile;
 use Civi\Api4\ExternalFile;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\ExternalFile\AttachmentManagerInterface;
 use Civi\ExternalFile\ExternalFileUriGeneratorInterface;
 
 final class GetAction extends DAOGetAction {
 
+  private AttachmentManagerInterface $attachmentManager;
+
   private ExternalFileUriGeneratorInterface $uriGenerator;
 
-  public function __construct(ExternalFileUriGeneratorInterface $uriGenerator) {
+  public function __construct(
+    AttachmentManagerInterface $attachmentManager,
+    ExternalFileUriGeneratorInterface $uriGenerator
+  ) {
     parent::__construct(ExternalFile::NAME, 'get');
+    $this->attachmentManager = $attachmentManager;
     $this->uriGenerator = $uriGenerator;
   }
 
@@ -46,6 +53,11 @@ final class GetAction extends DAOGetAction {
     }
 
     $this->addJoin('File AS file', 'INNER', NULL, ['file.id', '=', 'file_id']);
+
+    if ([] !== $this->attachmentManager->getPreDeletedExternalFileIds()) {
+      $this->addWhere('id', 'NOT IN', $this->attachmentManager->getPreDeletedExternalFileIds());
+    }
+
     parent::_run($result);
 
     $newRecords = [];

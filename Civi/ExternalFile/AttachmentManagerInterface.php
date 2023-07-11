@@ -35,7 +35,12 @@ interface AttachmentManagerInterface {
   ): AttachmentEntity;
 
   /**
+   * If a transaction is running the entity will be deleted on commit. So the
+   * file on the file system is only deleted if the transaction succeeds.
+   *
    * @throws \CRM_Core_Exception
+   *
+   * @see getPreDeletedExternalFileIds()
    */
   public function deleteByExternalFileId(int $externalFileId): void;
 
@@ -43,6 +48,14 @@ interface AttachmentManagerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getByExternalFileId(int $externalFileId): ?AttachmentEntity;
+
+  /**
+   * @phpstan-return array<int>
+   *   The external file IDs planned for deletion on transaction commit.
+   *
+   * @see deleteByExternalFileId()
+   */
+  public function getPreDeletedExternalFileIds(): array;
 
   /**
    * @throws \CRM_Core_Exception
