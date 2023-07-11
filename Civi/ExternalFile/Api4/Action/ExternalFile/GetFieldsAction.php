@@ -67,7 +67,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
 
     foreach ($fields as &$field) {
       if ('create' === $this->action) {
-        if (in_array($field['name'], ['filename', 'download_try_count', 'status'], TRUE)) {
+        if (in_array($field['name'], ['filename', 'download_try_count', 'status', 'identifier'], TRUE)) {
           $field['required'] = FALSE;
         }
       }
