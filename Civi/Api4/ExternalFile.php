@@ -28,20 +28,24 @@ class ExternalFile extends AbstractEntity {
     return \Civi::service(GetFieldsAction::class);
   }
 
-  public static function create(): CreateAction {
-    return \Civi::service(CreateAction::class);
+  public static function create(bool $checkPermissions = TRUE): CreateAction {
+    // @phpstan-ignore-next-line
+    return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);
   }
 
-  public static function delete(): DeleteAction {
-    return \Civi::service(DeleteAction::class);
+  public static function delete(bool $checkPermissions = TRUE): DeleteAction {
+    // @phpstan-ignore-next-line
+    return \Civi::service(DeleteAction::class)->setCheckPermissions($checkPermissions);
   }
 
-  public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+  public static function get(bool $checkPermissions = TRUE): GetAction {
+    // @phpstan-ignore-next-line
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
-  public static function update(): UpdateAction {
-    return \Civi::service(UpdateAction::class);
+  public static function update(bool $checkPermissions = TRUE): UpdateAction {
+    // @phpstan-ignore-next-line
+    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
   }
 
   /**
