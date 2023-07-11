@@ -72,6 +72,7 @@ final class Api4 implements Api4Interface {
     return $this->execute($entityName, 'getFields', [
       'action' => $action,
       'values' => $values,
+      'checkPermissions' => FALSE,
     ]);
   }
 
