@@ -108,7 +108,7 @@ final class FileDownloadController {
       Response::HTTP_OK,
       $headers,
       FALSE,
-    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $externalFile->getFilename());
+    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename());
   }
 
   private function isCacheUsable(Request $request, ExternalFileEntity $externalFile): bool {
