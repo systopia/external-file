@@ -23,6 +23,7 @@ use Civi\Api4\ExternalFile;
 use Civi\Api4\Generic\DAOCreateAction;
 use Civi\Api4\Generic\Result;
 use Civi\ExternalFile\Api4\Util\FileValueUtil;
+use Civi\ExternalFile\Api4\Util\Uuid;
 use Civi\ExternalFile\AttachmentManagerInterface;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\ExternalFileStatus;
@@ -80,6 +81,7 @@ final class CreateAction extends DAOCreateAction {
 
     $this->values['filename'] ??= basename($this->values['source']);
     Assert::notEmpty($this->values['filename']);
+    $this->values['identifier'] ??= Uuid::generateRandom();
     $this->values['download_try_count'] ??= 0;
     $this->values['status'] ??= ExternalFileStatus::NEW;
     $this->values['download_start_date'] ??= NULL;
@@ -88,11 +90,9 @@ final class CreateAction extends DAOCreateAction {
 
     $result = new Result();
     parent::_run($result);
-    $externalFileValues = $result->single();
     $this->values = $values;
 
-    // @phpstan-ignore-next-line
-    return ExternalFileEntity::fromArray($externalFileValues);
+    return ExternalFileEntity::singleFromApiResult($result);
   }
 
 }

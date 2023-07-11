@@ -53,6 +53,11 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
       '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/',
       $createValues['file_upload_date'],
     );
+    static::assertMatchesRegularExpression(
+      '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/',
+      $createValues['identifier']
+    );
+
     $expected = [
       'id' => $createValues['id'],
       'file_id' => $createValues['file_id'],
@@ -62,6 +67,7 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
       'download_start_date' => NULL,
       'download_try_count' => 0,
       'extension' => 'test',
+      'identifier' => $createValues['identifier'],
       'custom_data' => NULL,
       'last_modified' => NULL,
       'file_mime_type' => 'application/octet-stream',
@@ -152,7 +158,7 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
   public function testGetFields(): void {
     $fileFieldCount = File::getFields()->selectRowCount()->execute()->countMatched();
 
-    static::assertCount($fileFieldCount + 10, ExternalFile::getFields()->execute());
+    static::assertCount($fileFieldCount + 11, ExternalFile::getFields()->execute());
   }
 
 }

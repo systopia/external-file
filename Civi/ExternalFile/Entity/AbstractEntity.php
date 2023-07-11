@@ -55,6 +55,15 @@ abstract class AbstractEntity {
   }
 
   /**
+   * @return static
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function singleFromApiResult(Result $result): self {
+    return static::fromArray($result->single());
+  }
+
+  /**
    * @phpstan-param T $values
    *
    * @return static
