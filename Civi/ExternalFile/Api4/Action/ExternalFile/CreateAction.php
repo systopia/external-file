@@ -79,7 +79,7 @@ final class CreateAction extends DAOCreateAction {
     $this->values = FileValueUtil::getNonFileValues($values);
     Assert::string($this->values['source'] ?? NULL, 'Field "source" is missing.');
 
-    $this->values['filename'] ??= basename($this->values['source']);
+    $this->values['filename'] ??= rawurldecode(basename($this->values['source']));
     Assert::notEmpty($this->values['filename']);
     $this->values['identifier'] ??= Uuid::generateRandom();
     $this->values['download_try_count'] ??= 0;
