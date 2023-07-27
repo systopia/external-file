@@ -14,7 +14,7 @@ final class ExternalFileUriGenerator implements ExternalFileUriGeneratorInterfac
     // Remove the "?" that is added to the URI even though there's no query.
     return rtrim(
       CRM_Utils_System::url(
-        sprintf('civicrm/external-file/download/%d/%s', $externalFileId, $externalFilename),
+        sprintf('civicrm/external-file/download/%d/%s', $externalFileId, rawurlencode($externalFilename)),
         '',
         TRUE,
         NULL,
