@@ -89,30 +89,19 @@ final class ExternalFileDownloaderTest extends TestCase {
     $attachment = AttachmentFactory::create();
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
-      ->withConsecutive(
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            // Expectations are revalidated on test finish, so the assertion doesn't match than, anymore.
-            static $called = FALSE;
-            if (!$called) {
-              static::assertSame(1, $externalFile->getDownloadTryCount());
-              static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
-              static::assertNotNull($externalFile->getDownloadStartDate());
-              $called = TRUE;
-            }
-
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            static::assertSame(ExternalFileStatus::AVAILABLE, $externalFile->getStatus());
-            static::assertNotNull($externalFile->getLastModified());
-
-            return TRUE;
-          }),
-        ],
-      );
+      ->willReturnCallback(function (ExternalFileEntity $externalFile) {
+        static $called = FALSE;
+        if (!$called) {
+          static::assertSame(1, $externalFile->getDownloadTryCount());
+          static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
+          static::assertNotNull($externalFile->getDownloadStartDate());
+          $called = TRUE;
+        }
+        else {
+          static::assertSame(ExternalFileStatus::AVAILABLE, $externalFile->getStatus());
+          static::assertNotNull($externalFile->getLastModified());
+        }
+      });
 
     $this->httpClientMock->expects(static::once())->method('get')
       ->with($externalFile->getSource())
@@ -139,30 +128,19 @@ final class ExternalFileDownloaderTest extends TestCase {
     $externalFile = ExternalFileFactory::create();
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
-      ->withConsecutive(
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            // Expectations are revalidated on test finish, so the assertion doesn't match than, anymore.
-            static $called = FALSE;
-            if (!$called) {
-              static::assertSame(1, $externalFile->getDownloadTryCount());
-              static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
-              static::assertNotNull($externalFile->getDownloadStartDate());
-              $called = TRUE;
-            }
-
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            static::assertSame(ExternalFileStatus::DOWNLOAD_FAILED, $externalFile->getStatus());
-            static::assertNull($externalFile->getLastModified());
-
-            return TRUE;
-          }),
-        ],
-      );
+      ->willReturnCallback(function (ExternalFileEntity $externalFile) {
+        static $called = FALSE;
+        if (!$called) {
+          static::assertSame(1, $externalFile->getDownloadTryCount());
+          static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
+          static::assertNotNull($externalFile->getDownloadStartDate());
+          $called = TRUE;
+        }
+        else {
+          static::assertSame(ExternalFileStatus::DOWNLOAD_FAILED, $externalFile->getStatus());
+          static::assertNull($externalFile->getLastModified());
+        }
+      });
 
     $this->httpClientMock->expects(static::once())->method('get')
       ->with($externalFile->getSource())
@@ -183,30 +161,19 @@ final class ExternalFileDownloaderTest extends TestCase {
     $externalFile = ExternalFileFactory::create();
 
     $this->externalFileManagerMock->expects(static::exactly(2))->method('update')
-      ->withConsecutive(
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            // Expectations are revalidated on test finish, so the assertion doesn't match than, anymore.
-            static $called = FALSE;
-            if (!$called) {
-              static::assertSame(1, $externalFile->getDownloadTryCount());
-              static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
-              static::assertNotNull($externalFile->getDownloadStartDate());
-              $called = TRUE;
-            }
-
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (ExternalFileEntity $externalFile) {
-            static::assertSame(ExternalFileStatus::DOWNLOAD_FAILED, $externalFile->getStatus());
-            static::assertNull($externalFile->getLastModified());
-
-            return TRUE;
-          }),
-        ],
-      );
+      ->willReturnCallback(function (ExternalFileEntity $externalFile) {
+        static $called = FALSE;
+        if (!$called) {
+          static::assertSame(1, $externalFile->getDownloadTryCount());
+          static::assertSame(ExternalFileStatus::DOWNLOADING, $externalFile->getStatus());
+          static::assertNotNull($externalFile->getDownloadStartDate());
+          $called = TRUE;
+        }
+        else {
+          static::assertSame(ExternalFileStatus::DOWNLOAD_FAILED, $externalFile->getStatus());
+          static::assertNull($externalFile->getLastModified());
+        }
+      });
 
     $downloadException = new \RuntimeException('some error message');
     $this->httpClientMock->expects(static::once())->method('get')

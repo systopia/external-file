@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile;
 
+use Civi\ExternalFile\Entity\ExternalFileEntity;
 use Civi\ExternalFile\EntityFactory\ExternalFileFactory;
 use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
 use Civi\ExternalFile\Lock\LockFactoryInterface;
@@ -65,11 +66,15 @@ final class DownloadFilesJobTest extends TestCase {
 
     $externalFile1 = ExternalFileFactory::create(['id' => 1]);
     $externalFile2 = ExternalFileFactory::create(['id' => 2]);
+
     $this->externalFilesLoaderMock->method('get')->with(3)
       ->willReturn([$externalFile1, $externalFile2]);
 
+    $series = [$externalFile1, $externalFile2];
     $this->externalFileDownloaderMock->expects(static::exactly(2))->method('download')
-      ->withConsecutive([$externalFile1], [$externalFile2]);
+      ->willReturnCallback(function (ExternalFileEntity $externalFile) use (&$series) {
+        static::assertEquals(array_shift($series), $externalFile);
+      });
 
     $this->job->run(3);
   }
@@ -82,9 +87,13 @@ final class DownloadFilesJobTest extends TestCase {
     $this->externalFilesLoaderMock->method('get')->with(4)
       ->willReturn([$externalFile1, $externalFile2]);
 
+    $series = [$externalFile1, $externalFile2];
     $this->externalFileDownloaderMock->expects(static::exactly(2))->method('download')
-      ->withConsecutive([$externalFile1], [$externalFile2])
-      ->willThrowException(new DownloadAlreadyInProgressException());
+      ->willReturnCallback(function (ExternalFileEntity $externalFile) use (&$series) {
+        static::assertEquals(array_shift($series), $externalFile);
+
+        throw new DownloadAlreadyInProgressException();
+      });
 
     $this->job->run(4);
   }
