@@ -118,7 +118,7 @@ final class FileDownloadControllerTest extends TestCase {
     static::assertInstanceOf(BinaryFileResponse::class, $response);
     static::assertSame($attachment->getPath(), $response->getFile()->getRealPath());
     static::assertSame(
-      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $externalFile->getFilename()),
+      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename()),
       $response->headers->get('Content-Disposition'),
     );
   }
@@ -145,7 +145,7 @@ final class FileDownloadControllerTest extends TestCase {
     static::assertInstanceOf(BinaryFileResponse::class, $response);
     static::assertSame($attachment->getPath(), $response->getFile()->getRealPath());
     static::assertSame(
-      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $externalFile->getFilename()),
+      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename()),
       $response->headers->get('Content-Disposition'),
     );
   }
@@ -180,7 +180,7 @@ final class FileDownloadControllerTest extends TestCase {
     static::assertInstanceOf(BinaryFileResponse::class, $response);
     static::assertSame($attachment->getPath(), $response->getFile()->getRealPath());
     static::assertSame(
-      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $externalFile->getFilename()),
+      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename()),
       $response->headers->get('Content-Disposition'),
     );
 
@@ -330,7 +330,7 @@ final class FileDownloadControllerTest extends TestCase {
     static::assertInstanceOf(BinaryFileResponse::class, $response);
     static::assertSame($attachment->getPath(), $response->getFile()->getRealPath());
     static::assertSame(
-      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $externalFile->getFilename()),
+      HeaderUtils::makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename()),
       $response->headers->get('Content-Disposition'),
     );
   }
