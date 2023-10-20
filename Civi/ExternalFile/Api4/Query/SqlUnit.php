@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile\Api4\Query;
 
-use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Api4\Query\Api4Query;
 use Civi\Api4\Query\SqlExpression;
 
 /**
@@ -35,7 +35,7 @@ final class SqlUnit extends SqlExpression {
   /**
    * @inheritDoc
    */
-  public function render(Api4SelectQuery $query): string {
+  public function render(Api4Query $query, bool $includeAlias = FALSE): string {
     return $this->expr;
   }
 
