@@ -25,10 +25,10 @@ use Civi\ExternalFile\EntityFactory\ExternalFileFactory;
 use Civi\ExternalFile\Exception\DownloadAlreadyInProgressException;
 use Civi\ExternalFile\Lock\LockFactoryInterface;
 use Civi\ExternalFile\Lock\LockInterface;
+use ColinODell\PsrTestLogger\TestLogger;
 use CRM_Utils_HttpClient;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\Test\TestLogger;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**

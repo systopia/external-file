@@ -355,6 +355,7 @@ final class FileDownloadControllerTest extends TestCase {
     $this->tmpHandle = $tmpHandle;
     $metaData = stream_get_meta_data($this->tmpHandle);
 
+    // @phpstan-ignore-next-line
     return $metaData['uri'];
   }
 
