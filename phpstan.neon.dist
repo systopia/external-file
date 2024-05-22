@@ -2,6 +2,7 @@ parameters:
 	paths:
 		- Civi
 		- CRM
+		- managed
 		- services
 		- tests
 	excludePaths:
