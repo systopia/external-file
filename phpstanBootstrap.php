@@ -17,6 +17,10 @@
 
 declare(strict_types = 1);
 
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+  require_once __DIR__ . '/vendor/autoload.php';
+}
+
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \PHPStan\DependencyInjection\Container $container */
 /** @phpstan-var array<string> $bootstrapFiles */
@@ -24,9 +28,13 @@ $bootstrapFiles = $container->getParameter('bootstrapFiles');
 foreach ($bootstrapFiles as $bootstrapFile) {
   if (str_ends_with($bootstrapFile, 'vendor/autoload.php')) {
     $vendorDir = dirname($bootstrapFile);
-    $civiCrmCoreDir = $vendorDir . '/civicrm/civicrm-core';
+    $civiCrmVendorDir = $vendorDir . '/civicrm';
+    $civiCrmCoreDir = $civiCrmVendorDir . '/civicrm-core';
     if (file_exists($civiCrmCoreDir)) {
-      set_include_path(get_include_path() . PATH_SEPARATOR . $civiCrmCoreDir);
+      set_include_path(get_include_path()
+        . PATH_SEPARATOR . $civiCrmCoreDir
+        . PATH_SEPARATOR . $civiCrmVendorDir . '/civicrm-packages'
+      );
       // $bootstrapFile might not be included, yet. It is required for the
       // following require_once, though.
       require_once $bootstrapFile;

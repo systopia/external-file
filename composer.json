@@ -1,12 +1,18 @@
 {
+    "name": "systopia/external-file",
+    "type": "civicrm-ext",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "SYSTOPIA GmbH",
+            "email": "info@systopia.de",
+            "homepage": "https://www.systopia.de"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "allow-plugins": {
-            "civicrm/composer-compile-plugin": false,
-            "civicrm/composer-downloads-plugin": true,
-            "cweagans/composer-patches": true
-        }
+        "sort-packages": true
     },
     "require": {
         "webmozart/assert": "^1.11",
@@ -14,7 +20,7 @@
         "symfony/mime": ">=4.4"
     },
     "require-dev": {
-        "fig/log-test": "^1"
+        "colinodell/psr-testlogger": "^1"
     },
     "scripts": {
         "composer-phpcs": [

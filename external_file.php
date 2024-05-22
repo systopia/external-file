@@ -25,7 +25,7 @@ function _external_file_composer_autoload(): void {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
  */
-function external_file_civicrm_config(&$config): void {
+function external_file_civicrm_config(CRM_Core_Config $config): void {
   _external_file_composer_autoload();
   _external_file_civix_civicrm_config($config);
 }

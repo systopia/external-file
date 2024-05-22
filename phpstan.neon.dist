@@ -1,14 +1,15 @@
 parameters:
 	paths:
+		- api
 		- Civi
 		- CRM
 		- managed
 		- services
 		- tests
+		- external_file.php
 	excludePaths:
 		analyse:
-			- CRM/*/DAO/*
-			- CRM/*/Upgrader/Base.php
+			- CRM/ExternalFile/DAO/*
 			- tests/phpunit/bootstrap.php
 	scanFiles:
 		- external_file.civix.php
@@ -17,7 +18,6 @@ parameters:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
-		- vendor/autoload.php
 		- phpstanBootstrap.php
 	stubFiles:
 		- stubs/AbstractAction.stub
@@ -25,6 +25,8 @@ parameters:
 		- stubs/Event.stub
 		- stubs/StoppableEventInterface.stub
 	level: 9
+	universalObjectCratesClasses:
+		- Civi\Core\Event\GenericHookEvent
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
 	checkMissingCallableSignature: true
@@ -37,7 +39,7 @@ parameters:
 			- \Webmozart\Assert\InvalidArgumentException
 		implicitThrows: false
 	ignoreErrors:
-		# Note paths are prefixed with ""*/" to wirk with inspections in PHPStorm because of:
+		# Note paths are prefixed with "*/" to work with inspections in PHPStorm because of:
 		# https://youtrack.jetbrains.com/issue/WI-63891/PHPStan-ignoreErrors-configuration-isnt-working-with-inspections
 		- '#^Equal: Do not compare objects directly, DateTime(Immutable|Interface)? and DateTime(Immutable|Interface)? found.$#'
 		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\[^\s]+\\[^\s]+Action but returns mixed.$#'
