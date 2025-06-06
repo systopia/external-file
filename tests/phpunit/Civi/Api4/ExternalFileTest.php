@@ -70,7 +70,7 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
       'identifier' => $createValues['identifier'],
       'custom_data' => NULL,
       'last_modified' => NULL,
-      'file_mime_type' => 'application/octet-stream',
+      'file_mime_type' => 'inode/x-empty',
       'file_description' => NULL,
       'file_upload_date' => $createValues['file_upload_date'],
       'file_created_id' => NULL,
