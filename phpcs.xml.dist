@@ -6,7 +6,6 @@
     <file>api</file>
     <file>Civi</file>
     <file>CRM</file>
-    <file>managed</file>
     <file>services</file>
     <file>tests</file>
     <file>external_file.php</file>

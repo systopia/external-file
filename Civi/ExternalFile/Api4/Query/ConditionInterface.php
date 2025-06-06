@@ -20,9 +20,10 @@ declare(strict_types = 1);
 namespace Civi\ExternalFile\Api4\Query;
 
 /**
- * @phpstan-type ComparisonT array{string, string, 2?: scalar|array<scalar>}
- * Actually this should be: array{string, array<int, ComparisonT|CompositeConditionT>}, so that is not possible
- * @phpstan-type CompositeConditionT array{string, array<int, array>}
+ * @phpstan-import-type comparisonT from Comparison
+ * @phpstan-import-type compositeConditionT from CompositeCondition
+ *
+ * @phpstan-type conditionT comparisonT|compositeConditionT
  */
 interface ConditionInterface {
 
@@ -30,7 +31,7 @@ interface ConditionInterface {
 
   /**
    *
-   * @phpstan-return ComparisonT|CompositeConditionT
+   * @phpstan-return conditionT
    */
   public function toArray(): array;
 

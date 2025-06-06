@@ -6,12 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 ini_set('memory_limit', '2G');
 
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-  require_once __DIR__ . '/../../vendor/autoload.php';
+if (file_exists(__DIR__ . '/bootstrap.local.php')) {
+  require_once __DIR__ . '/bootstrap.local.php';
 }
-
-// Make CRM_ExternalFile_ExtensionUtil available.
-require_once __DIR__ . '/../../external_file.civix.php';
 
 /*
  * The return value of this function call is used in the strftime()
@@ -32,14 +29,24 @@ if ('C' === setlocale(LC_TIME, '0')) {
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable
 
+if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+  require_once __DIR__ . '/../../vendor/autoload.php';
+}
+
+// Make CRM_ExternalFile_ExtensionUtil available.
+require_once __DIR__ . '/../../external_file.civix.php';
+
 // phpcs:disable PSR1.Files.SideEffects
 
 // Add test classes to class loader.
 addExtensionDirToClassLoader(__DIR__);
 addExtensionToClassLoader('external-file');
 
-// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n.
-\CRM_Core_I18n::singleton();
+if (!function_exists('ts')) {
+  // Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n in CiviCRM < 5.74.
+  // In later versions the function is registered following the composer conventions.
+  \CRM_Core_I18n::singleton();
+}
 
 /**
  * Modify DI container for tests.
@@ -58,6 +65,10 @@ function addExtensionDirToClassLoader(string $extensionDir): void {
   $loader->add('api_', [$extensionDir]);
   $loader->addPsr4('api\\', [$extensionDir . '/api']);
   $loader->register();
+
+  if (file_exists($extensionDir . '/autoload.php')) {
+    require_once $extensionDir . '/autoload.php';
+  }
 }
 
 /**
@@ -89,7 +100,7 @@ function cv(string $cmd, string $decode = 'json') {
   $result = stream_get_contents($pipes[1]);
   fclose($pipes[1]);
   if (proc_close($process) !== 0) {
-    throw new RuntimeException("Command failed ($cmd):\n$result");
+    throw new \RuntimeException("Command failed ($cmd):\n$result");
   }
   switch ($decode) {
     case 'raw':
@@ -98,7 +109,7 @@ function cv(string $cmd, string $decode = 'json') {
     case 'phpcode':
       // If the last output is /*PHPCODE*/, then we managed to complete execution.
       if (substr(trim($result), 0, 12) !== '/*BEGINPHP*/' || substr(trim($result), -10) !== '/*ENDPHP*/') {
-        throw new RuntimeException("Command failed ($cmd):\n$result");
+        throw new \RuntimeException("Command failed ($cmd):\n$result");
       }
       return $result;
 
@@ -106,6 +117,6 @@ function cv(string $cmd, string $decode = 'json') {
       return json_decode($result, TRUE);
 
     default:
-      throw new RuntimeException("Bad decoder format ($decode)");
+      throw new \RuntimeException("Bad decoder format ($decode)");
   }
 }

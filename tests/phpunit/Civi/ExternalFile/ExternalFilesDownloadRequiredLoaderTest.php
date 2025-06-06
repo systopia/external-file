@@ -112,8 +112,7 @@ final class ExternalFilesDownloadRequiredLoaderTest extends AbstractExternalFile
    * @return array<\Civi\ExternalFile\Entity\ExternalFileEntity>
    */
   private function getExternalFiles(int $retries): array {
-    // @phpstan-ignore-next-line
-    return iterator_to_array($this->loader->get($retries));
+    return [...$this->loader->get($retries)];
   }
 
 }
