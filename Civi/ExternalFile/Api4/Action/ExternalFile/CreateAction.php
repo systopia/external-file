@@ -87,6 +87,7 @@ final class CreateAction extends DAOCreateAction {
     $this->values['download_start_date'] ??= NULL;
     $this->values['custom_data'] ??= NULL;
     $this->values['last_modified'] ??= NULL;
+    $this->values['file_mime_type'] ??= 'inode/x-empty';
 
     $result = new Result();
     parent::_run($result);
