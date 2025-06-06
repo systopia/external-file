@@ -27,6 +27,8 @@ use Civi\Test\Api3TestTrait;
  * @covers \_civicrm_api3_external_file_run_download_job_spec()
  *
  * @group headless
+ *
+ * @phpstan-ignore phpunit.covers, phpunit.covers
  */
 class api_v3_ExternalFile_RunDownloadJob_Test extends AbstractExternalFileHeadlessTestCase {
   use Api3TestTrait;

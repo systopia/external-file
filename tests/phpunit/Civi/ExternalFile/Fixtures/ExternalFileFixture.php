@@ -42,11 +42,13 @@ final class ExternalFileFixture {
       'identifier' => Uuid::generateRandom(),
       'custom_data' => NULL,
       'last_modified' => NULL,
+      'file_mime_type' => 'inode/x-empty',
     ]);
     $values = $action->execute()->single();
     // Filter values added by CiviCRM in create.
     unset($values['custom']);
     unset($values['check_permissions']);
+    unset($values['file_mime_type']);
 
     // @phpstan-ignore-next-line
     $externalFile = ExternalFileEntity::fromArray($values);

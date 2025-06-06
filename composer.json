@@ -12,12 +12,14 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
+        "prepend-autoloader": false,
         "sort-packages": true
     },
     "require": {
-        "webmozart/assert": "^1.11",
-        "symfony/http-foundation": ">=4.4",
-        "symfony/mime": ">=4.4"
+        "php": "^8.1",
+        "symfony/http-foundation": ">=5.4",
+        "symfony/mime": ">=5.4",
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "colinodell/psr-testlogger": "^1"
@@ -44,7 +46,7 @@
             "@php tools/phpcs/vendor/bin/phpcbf"
         ],
         "phpstan": [
-            "@php tools/phpstan/vendor/bin/phpstan"
+            "@php tools/phpstan/vendor/bin/phpstan -v"
         ],
         "phpunit": [
             "@php tools/phpunit/vendor/bin/simple-phpunit --coverage-text"

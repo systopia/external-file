@@ -24,8 +24,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\ExternalFile\Lock\Flock
  *
- * We'd get issues with CiviCRMs clean up methods because of the fork.
  * @runTestsInSeparateProcesses
+ * We'd get issues with CiviCRMs clean up methods because of the fork.
  */
 final class FlockTest extends TestCase {
 

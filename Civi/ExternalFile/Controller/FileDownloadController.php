@@ -123,6 +123,7 @@ final class FileDownloadController {
       sprintf('The last modified date "%s" is not parseable.', $externalFile->getLastModified())
     );
 
+    // @phpstan-ignore equal.notAllowed
     return $ifModifiedSince == $lastModified;
   }
 

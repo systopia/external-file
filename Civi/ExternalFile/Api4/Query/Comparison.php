@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile\Api4\Query;
 
+/**
+ * @phpstan-type comparisonT array{string, string, 2?: scalar|non-empty-array<scalar>}
+ */
 final class Comparison implements ConditionInterface {
 
   private string $field;
@@ -67,6 +70,8 @@ final class Comparison implements ConditionInterface {
 
   /**
    * @inheritDoc
+   *
+   * @phpstan-return comparisonT
    */
   public function toArray(): array {
     if (NULL === $this->value) {

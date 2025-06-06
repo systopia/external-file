@@ -19,12 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\ExternalFile\Api4\Query;
 
+/**
+ * Actually this should be: array{string, list<comparisonT|compositeConditionT>}, though that is not possible.
+ * @phpstan-type compositeConditionT array{string, list<array<int, mixed>>}
+ */
 final class CompositeCondition implements ConditionInterface {
 
   private string $operator;
 
   /**
-   * @phpstan-var array<ConditionInterface>
+   * @phpstan-var list<ConditionInterface>
    */
   private array $conditions;
 
@@ -52,6 +56,7 @@ final class CompositeCondition implements ConditionInterface {
 
   public function __construct(string $operation, ConditionInterface ...$conditions) {
     $this->operator = $operation;
+    /** @phpstan-var list<ConditionInterface> $conditions */
     $this->conditions = $conditions;
   }
 
@@ -68,6 +73,8 @@ final class CompositeCondition implements ConditionInterface {
 
   /**
    * @inheritDoc
+   *
+   * @phpstan-return compositeConditionT
    */
   public function toArray(): array {
     $conditions = array_map(fn (ConditionInterface $condition) => $condition->toArray(), $this->conditions);
