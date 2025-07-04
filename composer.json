@@ -1,5 +1,6 @@
 {
     "name": "systopia/external-file",
+    "description": "Downloads external files and makes them available in CiviCRM",
     "type": "civicrm-ext",
     "license": "AGPL-3.0-or-later",
     "authors": [
@@ -61,7 +62,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.2.x"
+            "dev-main": "0.2.x-dev"
         }
     }
 }
