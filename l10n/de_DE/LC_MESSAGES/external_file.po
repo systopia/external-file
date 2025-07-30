@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "External Files"
+msgstr "Externe Dateien"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "External File"
+msgstr "Externe Datei"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "ID"
+msgstr "ID"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Unique ExternalFile ID"
+msgstr "Eindeutige ExternalFile ID"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "File ID"
+msgstr "Datei-ID"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "FK to File"
+msgstr "Fremdschlüssel zu Datei"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Source"
+msgstr "Quelle"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Source URI"
+msgstr "Quell-URI"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Filename"
+msgstr "Dateiname"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Filename in download URI"
+msgstr "Dateiname in Download-URI"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Extension"
+msgstr "Erweiterung"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "The extension that added the file"
+msgstr "Die Erweiterung, welche die Datei hinzugefügt hat"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Identifier"
+msgstr "Kennung"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Unique identifier in combination with extension"
+msgstr "Eindeutige Kennung in Kombination mit der Erweiterung"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Custom Data"
+msgstr "Beliebige Daten"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Optional additional data"
+msgstr "Optionale zusätzliche Daten"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Status"
+msgstr "Status"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Download Start Date"
+msgstr "Download-Startddatum"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Download Try Count"
+msgstr "Downloadversuchszähler"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Last Modified"
+msgstr "Zuletzt geändert"
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Date used in Last-Modified header"
+msgstr "Datum aus dem Last-Modified Header"
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid "diff"
+msgstr "Differenz"
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid "Difference between two timestamps"
+msgstr "Differenz zwischen zwei Zeitstempeln"
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid ""
+"Calculates the difference between two timestamps. See https://mariadb.com/kb/"
+"en/timestampdiff/"
+msgstr ""
+"Berechnet die Differenz zwischen zwei Zeitstempeln. Siehe https://mariadb."
+"com/kb/en/timestampdiff/"
+
+#: api/v3/ExternalFile/RunDownloadJob.php
+msgid "Retries"
+msgstr "Wiederholungen"
+
+#: api/v3/ExternalFile/RunDownloadJob.php
+msgid "Retry failed downloads that many times"
+msgstr "Wiederhole fehlgeschlagene Downloads so oft"
+
+#: managed/Job_Download_external_files.mgd.php
+msgid ""
+"Downloads external files. The number of times to retry failed downloads can "
+"be changed with parameter \"retries\". It is ensured that this job runs only "
+"once."
+msgstr ""
+"Lädt externe Dateien herunter. Die Anzahl der Wiederholungen für "
+"fehlgeschlagene Downloads kann mit dem Parameter \"retries\" angepasst "
+"werden. Es ist sichergestellt, dass dieser Job nur einmal läuft."
+
+#~ msgid "Download external files"
+#~ msgstr "Externe Dateien herunterladen"

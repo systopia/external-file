@@ -1,0 +1,108 @@
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "External Files"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "External File"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "ID"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Unique ExternalFile ID"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "File ID"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "FK to File"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Source"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Source URI"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Filename"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Filename in download URI"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Extension"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "The extension that added the file"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Identifier"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Unique identifier in combination with extension"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Custom Data"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Optional additional data"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Status"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Download Start Date"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Download Try Count"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Last Modified"
+msgstr ""
+
+#: CRM/ExternalFile/DAO/ExternalFile.php
+msgid "Date used in Last-Modified header"
+msgstr ""
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid "diff"
+msgstr ""
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid "Difference between two timestamps"
+msgstr ""
+
+#: Civi/Api4/Query/SqlFunctionEXTERNALFILE_TIMESTAMPDIFF.php
+msgid "Calculates the difference between two timestamps. See https://mariadb.com/kb/en/timestampdiff/"
+msgstr ""
+
+#: api/v3/ExternalFile/RunDownloadJob.php
+msgid "Retries"
+msgstr ""
+
+#: api/v3/ExternalFile/RunDownloadJob.php
+msgid "Retry failed downloads that many times"
+msgstr ""
+
+#: managed/Job_Download_external_files.mgd.php
+msgid "Downloads external files. The number of times to retry failed downloads can be changed with parameter \"retries\". It is ensured that this job runs only once."
+msgstr ""
+
