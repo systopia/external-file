@@ -25,8 +25,10 @@ parameters:
 		- CRM_Core_Config
 		- CRM_Core_DAO
 	earlyTerminatingMethodCalls:
+		CRM_Utils_System:
+			- civiExit
 		CRM_Queue_Runner:
-		  - runAllViaWeb
+			- runAllViaWeb
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
 	checkMissingCallableSignature: true
@@ -44,7 +46,4 @@ parameters:
 		- '#^Equal: Do not compare objects directly, DateTime(Immutable|Interface)? and DateTime(Immutable|Interface)? found.$#'
 		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '/^Parameter #[0-9]+ \$[^\s]+ \(array[^\)]+\) of method Civi\\ExternalFile\\Api4\\Action\\[a-zA-Z]+\\[^\s]+Action::[^\s]+ should be contravariant with parameter \$[^\s]+ \([^\s]+\) of method [^\s]+$/'
-
-		# Tests
-		- '#^In method "[^\s]+Test::test[^\s]+", caught "Exception" must be rethrown.#'
 	tmpDir: .phpstan
