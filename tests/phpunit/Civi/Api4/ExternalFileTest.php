@@ -81,6 +81,9 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
     ];
     static::assertEquals($expected, $createValues);
 
+    if (version_compare(\CRM_Utils_System::version(), '6.14', '>=')) {
+      $expected['file_is_public'] = FALSE;
+    }
     static::assertEquals($expected, ExternalFile::get()->execute()->single());
 
     static::assertCount(1, ExternalFile::get()

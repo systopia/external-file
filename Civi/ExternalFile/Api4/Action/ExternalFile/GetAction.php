@@ -65,7 +65,7 @@ final class GetAction extends DAOGetAction {
     foreach ($result->getArrayCopy() as $record) {
       $newRecord = [];
       foreach ($record as $field => $value) {
-        $newRecord[preg_replace('/^file\./', 'file_', $field)] = $value;
+        $newRecord[$this->toResultField($field)] = $value;
       }
       if (is_int($newRecord['id'] ?? NULL) && is_string($newRecord['filename'] ?? NULL)) {
         $newRecord['uri'] = $this->uriGenerator->generateDownloadUri($newRecord['id'], $newRecord['filename']);
@@ -87,10 +87,9 @@ final class GetAction extends DAOGetAction {
       $where[1] = array_map(fn(array $subWhere) => $this->fixWhere($subWhere), $where[1]);
     }
     elseif ('file_id' !== $where[0]) {
-      $where[0] = preg_replace('/^file_/', 'file.', $where[0]);
+      $where[0] = $this->toJoinField($where[0]);
     }
 
-    // @phpstan-ignore-next-line
     return $where;
   }
 
@@ -102,10 +101,24 @@ final class GetAction extends DAOGetAction {
   private function fixOrderBy(array $orderBy): array {
     $result = [];
     foreach ($orderBy as $field => $order) {
-      $result[preg_replace('/^file_/', 'file.', $field)] = $order;
+      $result[$this->toJoinField($field)] = $order;
     }
 
     return $result;
+  }
+
+  private function toJoinField(string $fieldName): string {
+    /** @var string $fieldName */
+    $fieldName = preg_replace('/^file_/', 'file.', $fieldName);
+
+    return $fieldName;
+  }
+
+  private function toResultField(string $fieldName): string {
+    /** @var string $fieldName */
+    $fieldName = preg_replace('/^file\./', 'file_', $fieldName);
+
+    return $fieldName;
   }
 
 }
