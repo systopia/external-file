@@ -31,7 +31,8 @@ interface AttachmentManagerInterface {
     ExternalFileEntity $externalFile,
     ?string $description,
     ?int $createdId,
-    ?string $mimeType
+    ?string $mimeType,
+    ?string $content = NULL
   ): AttachmentEntity;
 
   /**

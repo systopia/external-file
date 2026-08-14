@@ -20,7 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\ExternalFile\AbstractExternalFileHeadlessTestCase;
+use Civi\ExternalFile\Event\AuthorizeFileDownloadEvent;
+use Civi\ExternalFile\Exception\DownloadFailedException;
 use Civi\ExternalFile\ExternalFileStatus;
+use Civi\ExternalFile\ExternalFileUriGenerator;
 
 /**
  * @covers \Civi\Api4\ExternalFile
@@ -105,16 +108,64 @@ final class ExternalFileTest extends AbstractExternalFileHeadlessTestCase {
     // Nothing should have changed.
     static::assertEquals($expected, ExternalFile::get()->execute()->single());
 
-    $expected['status'] = ExternalFileStatus::DOWNLOAD_FAILED;
+    $expected['status'] = ExternalFileStatus::AVAILABLE;
     $expected['file_description'] = 'test description';
+    $expected['file_mime_type'] = 'text/plain';
+    $expected['last_modified'] = 'Thu, 13 Aug 2026 01:02:03 GMT';
     ExternalFile::update()
       ->addWhere('id', '=', $expected['id'])
       ->setValues($expected)
       ->execute()->single();
     static::assertEquals($expected, ExternalFile::get()->execute()->single());
 
-    static::assertCount(0, ExternalFile::delete()->addWhere('id', '=', $expected['id'] + 1)->execute());
+    File::update(FALSE)
+      ->addWhere('id', '=', $expected['file_id'])
+      ->addValue('content', 'test')
+      ->execute();
+
+    // Use URI of existing managed file as source.
+    $uriGenerator = new ExternalFileUriGenerator();
+    $source = $uriGenerator->generateDownloadUri($expected['id'], $expected['filename']);
+    $e = NULL;
+    try {
+      ExternalFile::create()->setValues([
+        'source' => $source,
+        'extension' => 'test',
+      ])->execute()->single();
+    }
+    // @phpstan-ignore catch.neverThrown
+    catch (DownloadFailedException $e) {
+      static::assertSame("Downloading $source failed with status code 403", $e->getMessage());
+      static::assertSame(403, $e->getCode());
+    }
+    // @phpstan-ignore staticMethod.impossibleType
+    static::assertNotNull($e);
+
+    \Civi::dispatcher()->addListener(
+      AuthorizeFileDownloadEvent::class,
+      fn (AuthorizeFileDownloadEvent $event) => $event->setAuthorized(TRUE)
+    );
+    $resultExistingSource = ExternalFile::create()->setValues([
+      'source' => $source,
+      'extension' => 'test',
+    ])->execute()->single();
+    static::assertSame(ExternalFileStatus::AVAILABLE, $resultExistingSource['status']);
+    static::assertSame($expected['file_mime_type'], $resultExistingSource['file_mime_type']);
+    static::assertSame($expected['last_modified'], $resultExistingSource['last_modified']);
+    static::assertSame(
+      'test',
+      File::get(FALSE)
+        // uri and is_public are used when fetching content, see \Civi\Api4\Service\Spec\Provider\FileGetSpecProvider
+        ->addSelect('uri', 'is_public', 'content')
+        ->addWhere('id', '=', $resultExistingSource['file_id'])
+        ->execute()
+        ->single()['content']
+    );
+
+    static::assertCount(0, ExternalFile::delete()->addWhere('id', '=', $resultExistingSource['id'] + 1)->execute());
     static::assertCount(1, ExternalFile::delete()->addWhere('id', '=', $expected['id'])->execute());
+    static::assertCount(1, ExternalFile::get()->execute());
+    static::assertCount(1, ExternalFile::delete()->addWhere('id', '=', $resultExistingSource['id'])->execute());
     static::assertCount(0, ExternalFile::get()->execute());
   }
 

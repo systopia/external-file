@@ -58,14 +58,15 @@ final class AttachmentManager implements AttachmentManagerInterface {
     ExternalFileEntity $externalFile,
     ?string $description,
     ?int $createdId,
-    ?string $mimeType
+    ?string $mimeType,
+    ?string $content = NULL
   ): AttachmentEntity {
     $values = [
       'entity_table' => 'civicrm_external_file',
       'entity_id' => $externalFile->getId(),
       'name' => $externalFile->getFilename(),
       // content is required by Attachment entity.
-      'content' => '',
+      'content' => $content ?? '',
       // mime_type is required by Attachment entity.
       'mime_type' => $mimeType ?? 'inode/x-empty',
       'description' => $description,
