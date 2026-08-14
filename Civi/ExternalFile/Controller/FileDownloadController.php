@@ -108,6 +108,7 @@ final class FileDownloadController {
       Response::HTTP_OK,
       $headers,
       FALSE,
+      autoLastModified: FALSE
     ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $externalFile->getFilename());
   }
 

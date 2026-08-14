@@ -25,33 +25,38 @@ use Civi\Api4\Generic\Result;
 use Civi\ExternalFile\Api4\Util\FileValueUtil;
 use Civi\ExternalFile\Api4\Util\Uuid;
 use Civi\ExternalFile\AttachmentManagerInterface;
+use Civi\ExternalFile\Controller\FileDownloadController;
 use Civi\ExternalFile\Entity\ExternalFileEntity;
+use Civi\ExternalFile\Exception\DownloadFailedException;
 use Civi\ExternalFile\ExternalFileStatus;
 use Civi\ExternalFile\ExternalFileUriGeneratorInterface;
+use Civi\ExternalFile\ExternalFileUriMatcherInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Webmozart\Assert\Assert;
 
 final class CreateAction extends DAOCreateAction {
 
-  private AttachmentManagerInterface $attachmentManager;
-
-  private ExternalFileUriGeneratorInterface $uriGenerator;
-
   public function __construct(
-    AttachmentManagerInterface $attachmentManager,
-    ExternalFileUriGeneratorInterface $uriGenerator
+    private readonly AttachmentManagerInterface $attachmentManager,
+    private readonly FileDownloadController $fileDownloadController,
+    private readonly ExternalFileUriGeneratorInterface $uriGenerator,
+    private readonly ExternalFileUriMatcherInterface $uriMatcher,
   ) {
     parent::__construct(ExternalFile::NAME, 'create');
-    $this->attachmentManager = $attachmentManager;
-    $this->uriGenerator = $uriGenerator;
   }
 
   public function _run(Result $result): void {
+    Assert::string($this->values['source'] ?? NULL, 'Field "source" is missing.');
+    $content = $this->getContent($this->values['source']);
     $externalFile = $this->createExternalFileEntity();
+
     $attachment = $this->attachmentManager->create(
       $externalFile,
       $this->values['file_description'] ?? NULL,
-        $this->values['file_created_id'] ?? NULL,
-        $this->values['file_mime_type'] ?? NULL,
+      $this->values['file_created_id'] ?? NULL,
+      $this->values['file_mime_type'] ?? NULL,
+      $content,
     );
 
     $resultValues = $externalFile->toArray();
@@ -71,6 +76,7 @@ final class CreateAction extends DAOCreateAction {
       $externalFile->getId(),
       $externalFile->getFilename(),
     );
+
     $result->exchangeArray([$resultValues]);
   }
 
@@ -94,6 +100,40 @@ final class CreateAction extends DAOCreateAction {
     $this->values = $values;
 
     return ExternalFileEntity::singleFromApiResult($result);
+  }
+
+  private function getContent(string $source): ?string {
+    [$existingId, $existingFilename] = $this->uriMatcher->matchDownloadUri($source) ?? [NULL, NULL];
+    if (NULL === $existingId || NULL === $existingFilename) {
+      // Content will be fetched later from source URI.
+      return NULL;
+    }
+
+    /*
+     * source is a URI to a file already managed by this extension. We
+     * immediately fetch it to make sure the user adding the file is authorized
+     * to access the source file. Cookies and headers from the request might
+     * be used for authorization.
+     */
+    // @phpstan-ignore-next-line Ignore use of superglobals
+    $request = Request::create($source, cookies: $_COOKIE, server: $_SERVER);
+    // Avoid cache being used.
+    $request->headers->remove('If-Modified-Since');
+    $downloadResponse = $this->fileDownloadController->download($existingId, $existingFilename, $request);
+    if (!$downloadResponse->isSuccessful()) {
+      throw new DownloadFailedException(
+        sprintf('Downloading %s failed with status code %d', $source, $downloadResponse->getStatusCode()),
+        $downloadResponse->getStatusCode()
+      );
+    }
+
+    $this->values['file_mime_type'] = $downloadResponse->headers->get('Content-Type');
+    $this->values['last_modified'] = $downloadResponse->headers->get('Last-Modified');
+    $this->values['status'] = ExternalFileStatus::AVAILABLE;
+
+    assert($downloadResponse instanceof BinaryFileResponse);
+
+    return $downloadResponse->getFile()->getContent();
   }
 
 }

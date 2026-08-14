@@ -44,6 +44,8 @@ use Civi\ExternalFile\ExternalFilesDownloadRequiredLoader;
 use Civi\ExternalFile\ExternalFilesDownloadRequiredLoaderInterface;
 use Civi\ExternalFile\ExternalFileUriGenerator;
 use Civi\ExternalFile\ExternalFileUriGeneratorInterface;
+use Civi\ExternalFile\ExternalFileUriMatcher;
+use Civi\ExternalFile\ExternalFileUriMatcherInterface;
 use Civi\ExternalFile\Lock\FlockFactory;
 use Civi\ExternalFile\Lock\LockFactoryInterface;
 use Psr\Log\LoggerInterface;
@@ -82,6 +84,7 @@ $container->autowire(AttachmentManagerInterface::class, AttachmentManager::class
 $container->autowire(ExternalFileManagerInterface::class, ExternalFileManager::class);
 $container->autowire(ExternalFileDownloaderInterface::class, ExternalFileDownloader::class);
 $container->autowire(ExternalFileUriGeneratorInterface::class, ExternalFileUriGenerator::class);
+$container->autowire(ExternalFileUriMatcherInterface::class, ExternalFileUriMatcher::class);
 $container->autowire(ExternalFilesDownloadRequiredLoaderInterface::class, ExternalFilesDownloadRequiredLoader::class);
 
 $container->autowire(CreateAction::class)
