@@ -5,7 +5,8 @@ parameters:
 		# __call(). In many cases explicit methods like fetchWith() (or
 		# \CRM_Utils_String::parseOneOffStringThroughSmarty()) should be enough.
 		# Though if one of the implicit methods is used, this option has to be
-		# enabled.
+		# enabled. Obsolete with CiviCRM 6.20.
+		# https://github.com/civicrm/civicrm-core/pull/36493
 		implicitSmartyMethodsUsed: false
 	paths:
 		- api
@@ -63,4 +64,6 @@ parameters:
 parametersSchema:
 	civicrm: structure([
 		implicitSmartyMethodsUsed: bool()
+		# Optional extensions (i.e. not required in info.xml) that should be added to class loader.
+		?optionalExtensions: listOf(string())
 	])
